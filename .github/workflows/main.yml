@@ -1,0 +1,19 @@
+name: Deploy on Push
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deployer
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: cd htdocs/filix.ir/yadetNare/ && git pull git@github.com:saeed-54996/Yadet-Nare-Ha.git main
