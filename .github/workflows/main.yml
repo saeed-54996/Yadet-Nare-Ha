@@ -16,4 +16,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        script: cd htdocs/filix.ir/yadetNare/ && git pull git@github.com:saeed-54996/Yadet-Nare-Ha.git main
+        script: cd htdocs/filix.ir/yadetNare/ && git pull origin main
+
