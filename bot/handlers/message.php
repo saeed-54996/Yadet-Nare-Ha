@@ -11,5 +11,5 @@ $message_id = $update["message"]['message_id'] ?? null;
 
 
 if($text="/start"){
-    bot("sendMessage", array('chat_id' => $chat_id,'text' =>"Hello World!"));
+    bot("sendMessage", array('chat_id' => $chat_id,'text' =>"Hello World! mojiiii"));
 }
