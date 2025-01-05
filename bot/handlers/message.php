@@ -129,7 +129,7 @@ else if ($text == "🔙 بازگشت به منوی اصلی" && !isset($user_ste
 }
 else{
     $text = "🤔 متوجه دستور شما نشدم. لطفا دوباره تلاش کنید.";
-    update_step("");
+    update_step(null);
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
