@@ -10,7 +10,7 @@ $user_id = $update["message"]['from']['id'] ?? null;
 $message_id = $update["message"]['message_id'] ?? null;
 //===============                             =============
 
-require './functions/init-user.php';
+require './bot/functions/init-user.php';
 
 if($text=="/start"){
     bot("sendMessage", array('chat_id' => $chat_id,'text' =>"Hello World! mojiiii"));
