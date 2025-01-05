@@ -24,6 +24,7 @@ require './bot/functions/init-user.php'; // Init User system on start
         'resize_keyboard' => true, // Resize the keyboard to fit content
         'one_time_keyboard' => false // Keep the keyboard open after a selection
     ];
+    $keyboard_start = json_encode($keyboard_start);
 
 //================================================================
 
@@ -36,7 +37,7 @@ if ($text == "/start") {
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
-        'reply_markup' => $start_keyboard
+        'reply_markup' => $keyboard_start
     ]);
 }
 
