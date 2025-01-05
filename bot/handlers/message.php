@@ -18,14 +18,36 @@ require './bot/functions/init-user.php'; // Init User system on start
     //========= keyboard_start: =========
     $keyboard_start = [
         'keyboard' => [
-            [['text' => "📋 لیست وظایف من"],['text' => "➕ افزودن وظیفه"]],
-            [['text' => "👥 مدیریت کاربران"],['text' => "ℹ️ درباره ربات"]]
+            [['text' => "📋 لیست های انتشار"],['text' => "➕ افزودن وظیفه"]],
+            [['text' => "👥 مدیریت کاربران"],['text' => "ℹ️ درباره ربات"]],
+            [['text' => "تنظیمات ⚙️"]]
         ],
         'resize_keyboard' => true, // Resize the keyboard to fit content
-        'one_time_keyboard' => false // Keep the keyboard open after a selection
+        'one_time_keyboard' => true // Keep the keyboard open after a selection
     ];
     $keyboard_start = json_encode($keyboard_start);
 
+    //========= keyboard_settings: =========
+    $keyboard_setting = [
+        'keyboard' => [
+            [['text' => "🔗 تغییر نام کاربری"],['text' => "🔔 اعلان‌ها"]],
+            [['text' => "🔙 بازگشت به منوی اصلی"]]
+        ],
+        'resize_keyboard' => true, // Resize the keyboard to fit content
+        'one_time_keyboard' => true // Keep the keyboard open after a selection
+    ];
+    $keyboard_setting = json_encode($keyboard_setting);
+
+    //========= keyboard_list: ========= 
+    $keyboard_list = [
+        'keyboard' => [
+            [['text' => "🔔 لیست‌های من"],['text' => "📝 مدیریت لیست‌های من"]],
+            [['text' => "🔙 بازگشت به منوی اصلی"]]
+        ],
+        'resize_keyboard' => true, // Resize the keyboard to fit content
+        'one_time_keyboard' => true // Keep the keyboard open after a selection
+    ];
+    $keyboard_list = json_encode($keyboard_list);
 //================================================================
 
 
@@ -41,11 +63,18 @@ if ($text == "/start") {
     ]);
 }
 
-if ($text == "📋 لیست وظایف من") {
-    $text = "📝 شما هنوز هیچ وظیفه‌ای ثبت نکرده‌اید.\n\nبرای افزودن وظیفه جدید، روی '➕ افزودن وظیفه' کلیک کنید.";
+if ($text == "📋 لیست های انتشار") {
+    $text = "**لطفا انتخاب کنید** 👇
+- 📝 **مدیریت لیست‌های من**:
+```میتوانید لیست ایجاد کنید و لیست های از قبل ایجاد شده توسط خودتان را مدیریت کنید.```
+- 🔔 **لیست‌های من**:
+```برای مشاهده و مدیریت تمام لیست هایی که شما مشترک آن هستید میتوانید استفاده کنید.```
+";
     bot("sendMessage", [
         'chat_id' => $chat_id,
-        'text' => $text
+        'text' => $text,
+        'parse_mode' => "MarkdownV2",
+        'reply_markup' => $keyboard_list
     ]);
 }
 
@@ -70,5 +99,14 @@ if ($text == "ℹ️ درباره ربات") {
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text
+    ]);
+}
+
+if ($text == "تنظیمات ⚙️") {
+    $text = "🔧 در این بخش می‌توانید تنظیمات ربات خود را مدیریت کنید.";
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_setting
     ]);
 }
