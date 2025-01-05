@@ -5,6 +5,7 @@ CREATE TABLE tbl_users (
     last_name VARCHAR(60) DEFAULT NULL, -- user's last name
     tg_name VARCHAR(100) DEFAULT NULL, -- Telegram first name and last name
     tg_id BIGINT NOT NULL, -- Telegram user ID
+    step VARCHAR(50) DEFAULT NULL, -- Step of the user in the bot
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp for when the user was created
 );
 
