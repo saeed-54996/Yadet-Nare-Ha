@@ -115,7 +115,7 @@ if ($text == "/start") {
     if (isset($db_lists[0])) {
         //if user has lists
         foreach ($db_lists as $list) {
-            $user_lists[] = ['text' => "📂 " . $list['list_name']];
+            $user_lists[] = [['text' => "📂 " . $list['list_name']]];
         }
         //append the lists to the keyboard
         foreach ($user_lists as $list) {
