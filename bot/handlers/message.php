@@ -97,6 +97,7 @@ if ($text == "/start") {
 } else if ($text == "📝 مدیریت لیست‌های من") {
     //get user lists
     $db_lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ?", [$tg_id]);
+    bot("sendMessage", ['chat_id' => $chat_id,'text' => "got from db ".json_encode($db_lists)]);
     if (isset($db_lists[0])) {
         bot("sendMessage", ['chat_id' => $chat_id,'text' => "entered for list ".json_encode($db_lists)]);
         //if user has lists
