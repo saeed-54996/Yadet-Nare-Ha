@@ -41,7 +41,7 @@ $keyboard_setting = json_encode($keyboard_setting);
 //========= keyboard_list: ========= 
 $keyboard_list = [
     'keyboard' => [
-        [['text' => "🔔 لیست‌های من"], ['text' => "📝 مدیریت لیست‌های من"]],
+        [['text' => "🔔 لیست‌های عضو شده"], ['text' => "📝 مدیریت لیست‌های من"]],
         [['text' => "🔙 بازگشت به منوی اصلی"]]
     ],
     'resize_keyboard' => true, // Resize the keyboard to fit content
@@ -53,6 +53,15 @@ $keyboard_list = json_encode($keyboard_list);
 $keyboard_cancel = [
     'keyboard' => [
         [['text' => "لغو عملیات ❌"]]
+    ],
+    'resize_keyboard' => true, // Resize the keyboard to fit content
+    'one_time_keyboard' => true // Keep the keyboard open after a selection
+];
+//========= keyboard_manage_list: =========
+$keyboard_manage_list = [
+    'keyboard' => [
+        [['text' => "➕ لیست جدید"], ['text' => "🔙 بازگشت"]]
+        //list appends here
     ],
     'resize_keyboard' => true, // Resize the keyboard to fit content
     'one_time_keyboard' => true // Keep the keyboard open after a selection
@@ -84,6 +93,43 @@ if ($text == "/start") {
         'text' => $text,
         'parse_mode' => "MarkdownV2",
         'reply_markup' => $keyboard_list
+    ]);
+} else if ($text == "📝 مدیریت لیست‌های من") {
+    //get user lists
+    $db_lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ?", [$tg_id]);
+    if (isset($db_lists[0])) {
+        //if user has lists
+        foreach ($db_lists as $list) {
+            $user_lists[] = ['text' => "📂 " . $list['list_name']];
+        }
+        //append the lists to the keyboard
+        foreach ($user_lists as $list) {
+            $keyboard_manage_list['keyboard'][] = $list;
+        }
+    }
+    $keyboard_manage_list = json_encode($keyboard_manage_list);
+
+    $text = "لیست خود را انتخاب کنید یا یکی اضافه کنید:";
+
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_manage_list
+    ]);
+} else if ($text == "🔔 لیست‌های عضو شده") {
+
+
+    $text = "🔔 این بخش برای مدیریت لیست‌های شما طراحی شده است.\n\n🔹 هنوز لیست جدیدی ایجاد نشده‌است.";
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text
+    ]);
+} else if ($text == "🔙 بازگشت به منوی اصلی") {
+    $text = "🔙 شما به منوی اصلی بازگشتید.";
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_start
     ]);
 } else if ($text == "➕ افزودن وظیفه") {
     $text = "✏️ لطفاً عنوان وظیفه جدید خود را وارد کنید:";
@@ -122,8 +168,8 @@ if ($text == "/start") {
         ]);
         exit();
     }
-    
-    
+
+
     if ($user_step == "change_name") {
         //update first name
         $db->q("UPDATE tbl_users SET first_name = ? WHERE tg_id = ?", [$text, $tg_id]);
@@ -135,9 +181,7 @@ if ($text == "/start") {
             'parse_mode' => "MarkdownV2",
             'reply_markup' => $keyboard_cancel
         ]);
-
-    }
-    else if ($user_step == "change_family") {
+    } else if ($user_step == "change_family") {
         //update last name  
         $db->q("UPDATE tbl_users SET last_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step(null);
@@ -148,8 +192,7 @@ if ($text == "/start") {
             'parse_mode' => "MarkdownV2",
             'reply_markup' => $keyboard_start
         ]);
-    } 
-    else {
+    } else {
 
         $text = "🔗 لطفا نام جدید خود را وارد کنید:
 >نام کاربری شما میتواند فارسی یا انگلیسی باشد و به سایر کاربران ربات نشان داده خواهد شد\.
@@ -171,8 +214,7 @@ if ($text == "/start") {
             'reply_markup' => $keyboard_cancel
         ]);
     }
-
-} else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step == null) {
+} else if (($text == "🔙 بازگشت به منوی اصلی" || $text == "🔙 بازگشت") && $user_step == null) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
