@@ -30,7 +30,7 @@ require './bot/functions/init-user.php'; // Init User system on start
     //========= keyboard_settings: =========
     $keyboard_setting = [
         'keyboard' => [
-            [['text' => "🔗 تغییر نام کاربری"],['text' => "🔔 اعلان‌ها"]],
+            [['text' => "🔗 تغییر نام نمایشی",['text' => "🔔 اعلان‌ها"]],
             [['text' => "🔙 بازگشت به منوی اصلی"]]
         ],
         'resize_keyboard' => true, // Resize the keyboard to fit content
@@ -48,6 +48,15 @@ require './bot/functions/init-user.php'; // Init User system on start
         'one_time_keyboard' => true // Keep the keyboard open after a selection
     ];
     $keyboard_list = json_encode($keyboard_list);
+
+    //========= keyboard_cancel: =========
+    $keyboard_cancel = [
+        'keyboard' => [
+            [['text' => "لغو عملیات ❌"]]
+        ],
+        'resize_keyboard' => true, // Resize the keyboard to fit content
+        'one_time_keyboard' => true // Keep the keyboard open after a selection
+    ];
 //================================================================
 
 
@@ -112,25 +121,54 @@ else if ($text == "تنظیمات ⚙️") {
         'reply_markup' => $keyboard_setting
     ]);
 }
-else if ($text == "🔗 تغییر نام کاربری" || $user_step=="change_username") {
-    if($user_step=="change_username"){
-        $db->q("UPDATE tbl_users SET username = ? WHERE tg_id = ?", [$text, $tg_id]);
+
+
+
+
+else if ($text == "🔗 تغییر نام نمایشی" || $user_step=="change_name" || $user_step=="change_family") {
+
+
+
+    if($user_step=="change_name"){
+        //update first name
+        $db->q("UPDATE tbl_users SET first_name = ? WHERE tg_id = ?", [$text, $tg_id]);
+        update_step("change_family");
+        $text = "🔗 نام شما با موفقیت ثبت شد\. لطفا نام خانوادگی خود را وارد کنید\:";
+    }
+    else if($user_step=="change_family"){
+        //update last name  
+        $db->q("UPDATE tbl_users SET last_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step(null);
-        $text = "👍 نام کاربری شما با موفقیت تغییر یافت.";
+        $text = "🔗 نام خانوادگی شما با موفقیت ثبت شد\. تغییرات با موفقیت اعمال شد\.";
     }
     else{
+
     $text = "🔗 لطفا نام جدید خود را وارد کنید:
 >نام کاربری شما میتواند فارسی یا انگلیسی باشد و به سایر کاربران ربات نشان داده خواهد شد\.
 >بهتر است از نام و نام خانوادگی خود به صورت فارسی برای این کار استفاده کنید\.
 ";
+
+    bot("sendMessage", [
+    'chat_id' => $chat_id,
+    'text' => $text,
+    'parse_mode' => "MarkdownV2"
+    ]);
+    $text = "🔗 لطفا نام جدید خود را وارد کنید:";
+    update_step("change_name");
     }
-    update_step("change_username");
+
+
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
         'parse_mode' => "MarkdownV2"
+        'reply_markup' => $keyboard_cancel
     ]);
 }
+
+
+
+
 else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step==null) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
