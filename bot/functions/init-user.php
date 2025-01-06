@@ -16,6 +16,7 @@ if (isset($db_user[0])) {
 //function to update user step in db:
 function update_step($step)
 {
-    global $db, $tg_id;
+    global $db, $tg_id, $user_step;
     $db->q("UPDATE tbl_users SET step = ? WHERE tg_id = ?", [$step, $tg_id]);
+    $user_step = $step;
 }
