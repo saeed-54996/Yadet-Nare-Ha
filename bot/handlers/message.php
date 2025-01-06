@@ -120,6 +120,7 @@ if ($text == "/start") {
             'text' => $text,
             'reply_markup' => $keyboard_start
         ]);
+        exit();
     }
     
     
