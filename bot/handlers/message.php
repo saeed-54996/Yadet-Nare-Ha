@@ -151,7 +151,7 @@ if ($text == "/start") {
         bot("sendMessage", [
             'chat_id' => $chat_id,
             'text' => $text,
-            'reply_markup' => $keyboard_manage_list
+            'reply_markup' => $keyboard_list
         ]);
         exit();
     }
@@ -164,6 +164,11 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_cancel
     ]);
+
+
+
+
+    
 } else if ($text == "🔔 لیست‌های عضو شده") {
 
 
