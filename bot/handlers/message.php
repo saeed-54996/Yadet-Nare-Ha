@@ -110,7 +110,7 @@ if ($text == "/start") {
     ON 
     l.list_owner_id = u.id
     WHERE 
-    u.tg_id = ? ;", [$tg_id]);
+    u.tg_id = ? AND l.is_deleted = 0;", [$tg_id]);
 
     if (isset($db_lists[0])) {
         //if user has lists
@@ -122,7 +122,7 @@ if ($text == "/start") {
     $keyboard_manage_list = json_encode($keyboard_manage_list);
 
     $text = "لیست خود را انتخاب کنید یا یکی اضافه کنید:";
-
+    update_step("choosing_list");
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
@@ -131,7 +131,40 @@ if ($text == "/start") {
 
 
 
-
+} else if ($step == "choosing_list"){
+    if (preg_match("/📂 /", $text)) {
+        $text = str_replace("📂 ", "", $text);
+        $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
+        if (isset($db_list[0])) {
+            $text = "📂 لیست $text انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_'.$db_list['id']],['text' => '🗑 حذف لیست', 'callback_data' => "delete_".$db_list['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_'.$db_list['id']]],
+                        [['text' => '🔙 Back', 'callback_data' => 'back_action']],
+                    ]
+                ]
+            ]);
+        } else {
+            $text = "🔗 لیست $text یافت نشد.";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'reply_markup' => $keyboard_list
+            ]);
+        }
+    } else {
+        $text = "🔗 لطفا یکی از لیست‌های خود را انتخاب کنید.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'reply_markup' => $keyboard_list
+        ]);
+    }
+}
 
 } else if ($text == "➕ لیست جدید" || $user_step == "create_list") {
 
@@ -168,7 +201,7 @@ if ($text == "/start") {
 
 
 
-    
+
 } else if ($text == "🔔 لیست‌های عضو شده") {
 
 
