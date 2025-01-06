@@ -15,48 +15,48 @@ require './bot/functions/init-user.php'; // Init User system on start
 
 
 //========================  Keyboards:  ==========================
-    //========= keyboard_start: =========
-    $keyboard_start = [
-        'keyboard' => [
-            [['text' => "📋 لیست های انتشار"],['text' => "➕ افزودن وظیفه"]],
-            [['text' => "👥 مدیریت کاربران"],['text' => "ℹ️ درباره ربات"]],
-            [['text' => "تنظیمات ⚙️"]]
-        ],
-        'resize_keyboard' => true, // Resize the keyboard to fit content
-        'one_time_keyboard' => true // Keep the keyboard open after a selection
-    ];
-    $keyboard_start = json_encode($keyboard_start);
+//========= keyboard_start: =========
+$keyboard_start = [
+    'keyboard' => [
+        [['text' => "📋 لیست های انتشار"], ['text' => "➕ افزودن وظیفه"]],
+        [['text' => "👥 مدیریت کاربران"], ['text' => "ℹ️ درباره ربات"]],
+        [['text' => "تنظیمات ⚙️"]]
+    ],
+    'resize_keyboard' => true, // Resize the keyboard to fit content
+    'one_time_keyboard' => true // Keep the keyboard open after a selection
+];
+$keyboard_start = json_encode($keyboard_start);
 
-    //========= keyboard_settings: =========
-    $keyboard_setting = [
-        'keyboard' => [
-            [['text' => "🔗 تغییر نام نمایشی"],['text' => "🔔 اعلان‌ها"]],
-            [['text' => "🔙 بازگشت به منوی اصلی"]]
-        ],
-        'resize_keyboard' => true, // Resize the keyboard to fit content
-        'one_time_keyboard' => true // Keep the keyboard open after a selection
-    ];
-    $keyboard_setting = json_encode($keyboard_setting);
+//========= keyboard_settings: =========
+$keyboard_setting = [
+    'keyboard' => [
+        [['text' => "🔗 تغییر نام نمایشی"], ['text' => "🔔 اعلان‌ها"]],
+        [['text' => "🔙 بازگشت به منوی اصلی"]]
+    ],
+    'resize_keyboard' => true, // Resize the keyboard to fit content
+    'one_time_keyboard' => true // Keep the keyboard open after a selection
+];
+$keyboard_setting = json_encode($keyboard_setting);
 
-    //========= keyboard_list: ========= 
-    $keyboard_list = [
-        'keyboard' => [
-            [['text' => "🔔 لیست‌های من"],['text' => "📝 مدیریت لیست‌های من"]],
-            [['text' => "🔙 بازگشت به منوی اصلی"]]
-        ],
-        'resize_keyboard' => true, // Resize the keyboard to fit content
-        'one_time_keyboard' => true // Keep the keyboard open after a selection
-    ];
-    $keyboard_list = json_encode($keyboard_list);
+//========= keyboard_list: ========= 
+$keyboard_list = [
+    'keyboard' => [
+        [['text' => "🔔 لیست‌های من"], ['text' => "📝 مدیریت لیست‌های من"]],
+        [['text' => "🔙 بازگشت به منوی اصلی"]]
+    ],
+    'resize_keyboard' => true, // Resize the keyboard to fit content
+    'one_time_keyboard' => true // Keep the keyboard open after a selection
+];
+$keyboard_list = json_encode($keyboard_list);
 
-    //========= keyboard_cancel: =========
-    $keyboard_cancel = [
-        'keyboard' => [
-            [['text' => "لغو عملیات ❌"]]
-        ],
-        'resize_keyboard' => true, // Resize the keyboard to fit content
-        'one_time_keyboard' => true // Keep the keyboard open after a selection
-    ];
+//========= keyboard_cancel: =========
+$keyboard_cancel = [
+    'keyboard' => [
+        [['text' => "لغو عملیات ❌"]]
+    ],
+    'resize_keyboard' => true, // Resize the keyboard to fit content
+    'one_time_keyboard' => true // Keep the keyboard open after a selection
+];
 //================================================================
 
 
@@ -70,9 +70,7 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_start
     ]);
-}
-
-else if ($text == "📋 لیست های انتشار") {
+} else if ($text == "📋 لیست های انتشار") {
     $text = "
     *لطفا انتخاب کنید* 👇
 \- 📝 *مدیریت لیست‌های من*:
@@ -87,74 +85,68 @@ else if ($text == "📋 لیست های انتشار") {
         'parse_mode' => "MarkdownV2",
         'reply_markup' => $keyboard_list
     ]);
-}
-
-else if ($text == "➕ افزودن وظیفه") {
+} else if ($text == "➕ افزودن وظیفه") {
     $text = "✏️ لطفاً عنوان وظیفه جدید خود را وارد کنید:";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text
     ]);
-}
-
-else if ($text == "👥 مدیریت کاربران") {
+} else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text
     ]);
-}
-
-else if ($text == "ℹ️ درباره ربات") {
+} else if ($text == "ℹ️ درباره ربات") {
     $text = "🤖 این ربات برای مدیریت وظایف و یادآوری‌ها طراحی شده است.\n\n📬 پیشنهادات و مشکلات خود را از طریق پیام ارسال کنید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text
     ]);
-}
-
-else if ($text == "تنظیمات ⚙️") {
+} else if ($text == "تنظیمات ⚙️") {
     $text = "🔧 در این بخش می‌توانید تنظیمات ربات خود را مدیریت کنید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
         'reply_markup' => $keyboard_setting
     ]);
-}
+} else if ($text == "🔗 تغییر نام نمایشی" || $user_step == "change_name" || $user_step == "change_family") {
 
-
-
-
-else if ($text == "🔗 تغییر نام نمایشی" || $user_step=="change_name" || $user_step=="change_family") {
-
-
-
-    if($user_step=="change_name"){
+    if ($text == "لغو عملیات ❌") {
+        update_step(null);
+        $text = "🔗 عملیات لغو شد.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'reply_markup' => $keyboard_start
+        ]);
+    }
+    
+    
+    if ($user_step == "change_name") {
         //update first name
         $db->q("UPDATE tbl_users SET first_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step("change_family");
         $text = "🔗 نام شما با موفقیت ثبت شد\. لطفا نام خانوادگی خود را وارد کنید\:";
-    }
-    else if($user_step=="change_family"){
+    } else if ($user_step == "change_family") {
         //update last name  
         $db->q("UPDATE tbl_users SET last_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step(null);
         $text = "🔗 نام خانوادگی شما با موفقیت ثبت شد\. تغییرات با موفقیت اعمال شد\.";
-    }
-    else{
+    } else {
 
-    $text = "🔗 لطفا نام جدید خود را وارد کنید:
+        $text = "🔗 لطفا نام جدید خود را وارد کنید:
 >نام کاربری شما میتواند فارسی یا انگلیسی باشد و به سایر کاربران ربات نشان داده خواهد شد\.
 >بهتر است از نام و نام خانوادگی خود به صورت فارسی برای این کار استفاده کنید\.
 ";
 
-    bot("sendMessage", [
-    'chat_id' => $chat_id,
-    'text' => $text,
-    'parse_mode' => "MarkdownV2"
-    ]);
-    $text = "🔗 لطفا نام جدید خود را وارد کنید:";
-    update_step("change_name");
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2"
+        ]);
+        $text = "🔗 لطفا نام جدید خود را وارد کنید:";
+        update_step("change_name");
     }
 
 
@@ -164,20 +156,14 @@ else if ($text == "🔗 تغییر نام نمایشی" || $user_step=="change_n
         'parse_mode' => "MarkdownV2",
         'reply_markup' => $keyboard_cancel
     ]);
-}
-
-
-
-
-else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step==null) {
+} else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step == null) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
         'reply_markup' => $keyboard_start
     ]);
-}
-else{
+} else {
     $text = "🤔 متوجه دستور شما نشدم. لطفا دوباره تلاش کنید.";
     update_step(null);
     bot("sendMessage", [
