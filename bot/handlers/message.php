@@ -30,7 +30,7 @@ require './bot/functions/init-user.php'; // Init User system on start
     //========= keyboard_settings: =========
     $keyboard_setting = [
         'keyboard' => [
-            [['text' => "🔗 تغییر نام نمایشی",['text' => "🔔 اعلان‌ها"]],
+            [['text' => "🔗 تغییر نام نمایشی"],['text' => "🔔 اعلان‌ها"]],
             [['text' => "🔙 بازگشت به منوی اصلی"]]
         ],
         'resize_keyboard' => true, // Resize the keyboard to fit content
