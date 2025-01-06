@@ -161,7 +161,7 @@ else if ($text == "🔗 تغییر نام نمایشی" || $user_step=="change_n
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
-        'parse_mode' => "MarkdownV2"
+        'parse_mode' => "MarkdownV2",
         'reply_markup' => $keyboard_cancel
     ]);
 }
