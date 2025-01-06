@@ -128,6 +128,41 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_manage_list
     ]);
+
+
+
+
+
+} else if ($text == "➕ لیست جدید" || $user_step == "create_list") {
+
+    if ($text == "لغو عملیات ❌") {
+        update_step(null);
+        $text = "🔗 عملیات لغو شد.";
+        bot("sendMessage", ['chat_id' => $chat_id, 'text' => $text, 'reply_markup' => $keyboard_start]);
+        exit();
+    }
+
+
+    if ($user_step == "create_list") {
+        //create new list
+        $db->q("INSERT INTO tbl_notification_lists (list_name, list_owner_id) VALUES (?, (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id]);
+        update_step(null);
+        $text = "🔗 لیست جدید با نام $text ایجاد شد.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'reply_markup' => $keyboard_manage_list
+        ]);
+    }
+
+
+    $text = "لطفا نام لیست جدید خود را وارد کنید:";
+    update_step("create_list");
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_cancel
+    ]);
 } else if ($text == "🔔 لیست‌های عضو شده") {
 
 
@@ -173,11 +208,7 @@ if ($text == "/start") {
     if ($text == "لغو عملیات ❌") {
         update_step(null);
         $text = "🔗 عملیات لغو شد.";
-        bot("sendMessage", [
-            'chat_id' => $chat_id,
-            'text' => $text,
-            'reply_markup' => $keyboard_start
-        ]);
+        bot("sendMessage", ['chat_id' => $chat_id, 'text' => $text, 'reply_markup' => $keyboard_start]);
         exit();
     }
 
