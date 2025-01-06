@@ -153,6 +153,7 @@ if ($text == "/start") {
             'text' => $text,
             'reply_markup' => $keyboard_manage_list
         ]);
+        exit();
     }
 
 
