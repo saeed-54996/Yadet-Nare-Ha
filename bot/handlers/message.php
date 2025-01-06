@@ -114,12 +114,9 @@ if ($text == "/start") {
 
     if (isset($db_lists[0])) {
         //if user has lists
+        // Append user lists directly to the keyboard
         foreach ($db_lists as $list) {
-            $user_lists[] = [['text' => "📂 " . $list['list_name']]];
-        }
-        //append the lists to the keyboard
-        foreach ($user_lists as $list) {
-            $keyboard_manage_list['keyboard'][] = $list;
+            $keyboard_manage_list['keyboard'][] = [['text' => "📂 " . $list['list_name']]];
         }
     }
     $keyboard_manage_list = json_encode($keyboard_manage_list);
