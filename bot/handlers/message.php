@@ -131,7 +131,7 @@ else if ($text == "🔗 تغییر نام کاربری" || $user_step=="change_u
         'parse_mode' => "MarkdownV2"
     ]);
 }
-else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step==null)) {
+else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step==null) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
