@@ -96,10 +96,23 @@ if ($text == "/start") {
     ]);
 } else if ($text == "📝 مدیریت لیست‌های من") {
     //get user lists
-    $db_lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ?", [$tg_id]);
-    bot("sendMessage", ['chat_id' => $chat_id,'text' => "got from db ".json_encode($db_lists)]);
+    $db_lists = $db->q("SELECT 
+    l.id,
+    l.list_name,
+    l.list_lastest_update,
+    l.list_created_at,
+    l.is_deleted,
+    l.task_adding_rule
+    FROM 
+    tbl_notification_lists l
+    JOIN 
+    tbl_users u 
+    ON 
+    l.list_owner_id = u.id
+    WHERE 
+    u.tg_id = ? ;", [$tg_id]);
+
     if (isset($db_lists[0])) {
-        bot("sendMessage", ['chat_id' => $chat_id,'text' => "entered for list ".json_encode($db_lists)]);
         //if user has lists
         foreach ($db_lists as $list) {
             $user_lists[] = ['text' => "📂 " . $list['list_name']];
