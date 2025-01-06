@@ -131,7 +131,7 @@ if ($text == "/start") {
 
 
 
-} else if ($step == "choosing_list"){
+} else if ($user_step == "choosing_list"){
     if (preg_match("/📂 /", $text)) {
         $text = str_replace("📂 ", "", $text);
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
