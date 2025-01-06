@@ -98,6 +98,7 @@ if ($text == "/start") {
     //get user lists
     $db_lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ?", [$tg_id]);
     if (isset($db_lists[0])) {
+        bot("sendMessage", ['chat_id' => $chat_id,'text' => "entered for list ".json_encode($db_lists)]);
         //if user has lists
         foreach ($db_lists as $list) {
             $user_lists[] = ['text' => "📂 " . $list['list_name']];
