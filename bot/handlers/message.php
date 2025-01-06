@@ -129,7 +129,15 @@ if ($text == "/start") {
         $db->q("UPDATE tbl_users SET first_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step("change_family");
         $text = "🔗 نام شما با موفقیت ثبت شد\. لطفا نام خانوادگی خود را وارد کنید\:";
-    } else if ($user_step == "change_family") {
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2",
+            'reply_markup' => $keyboard_cancel
+        ]);
+
+    }
+    else if ($user_step == "change_family") {
         //update last name  
         $db->q("UPDATE tbl_users SET last_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step(null);
@@ -140,7 +148,8 @@ if ($text == "/start") {
             'parse_mode' => "MarkdownV2",
             'reply_markup' => $keyboard_start
         ]);
-    } else {
+    } 
+    else {
 
         $text = "🔗 لطفا نام جدید خود را وارد کنید:
 >نام کاربری شما میتواند فارسی یا انگلیسی باشد و به سایر کاربران ربات نشان داده خواهد شد\.
