@@ -134,6 +134,12 @@ if ($text == "/start") {
         $db->q("UPDATE tbl_users SET last_name = ? WHERE tg_id = ?", [$text, $tg_id]);
         update_step(null);
         $text = "🔗 نام خانوادگی شما با موفقیت ثبت شد\. تغییرات با موفقیت اعمال شد\.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2",
+            'reply_markup' => $keyboard_start
+        ]);
     } else {
 
         $text = "🔗 لطفا نام جدید خود را وارد کنید:
@@ -146,17 +152,17 @@ if ($text == "/start") {
             'text' => $text,
             'parse_mode' => "MarkdownV2"
         ]);
+
         $text = "🔗 لطفا نام جدید خود را وارد کنید:";
         update_step("change_name");
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2",
+            'reply_markup' => $keyboard_cancel
+        ]);
     }
 
-
-    bot("sendMessage", [
-        'chat_id' => $chat_id,
-        'text' => $text,
-        'parse_mode' => "MarkdownV2",
-        'reply_markup' => $keyboard_cancel
-    ]);
 } else if ($text == "🔙 بازگشت به منوی اصلی" && $user_step == null) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
