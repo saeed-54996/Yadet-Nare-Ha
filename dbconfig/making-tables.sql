@@ -16,7 +16,7 @@ CREATE TABLE tbl_notification_lists (
     list_lastest_update TIMESTAMP DEFAULT NULL, -- Timestamp for when the list was last updated
     list_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp for when the list was created
     is_deleted BOOLEAN DEFAULT FALSE, -- Flag to mark if the list is deleted
-    task_adding_rule TINYINT NOT NULL, -- 0: owner, 1: admin, 2: subs
+    task_adding_rule TINYINT NOT NULL DEFAULT 1, -- 0: owner, 1: admin, 2: subs
     FOREIGN KEY (list_owner_id) REFERENCES tbl_users(id) ON DELETE CASCADE -- If the owner is deleted, the list is deleted
 );
 
