@@ -33,8 +33,8 @@ function jalaliToUnix(string $jalaliDate, string $time): int
 }
 
 // Example Usage
-$jalaliDate = "1403/10/23";
-$time = "10:50";
+// $jalaliDate = "1403/10/23";
+// $time = "10:50";
 
-$unixTimestamp = jalaliToUnix($jalaliDate, $time);
-echo "Unix Timestamp (UTC): $unixTimestamp" . PHP_EOL;
+// $unixTimestamp = jalaliToUnix($jalaliDate, $time);
+// echo "$unixTimestamp";
