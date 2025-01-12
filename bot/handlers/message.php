@@ -227,8 +227,9 @@ if ($text == "/start") {
     }
 
     //unset new-list keyboard button:
-    unset($keyboard_manage_list['keyboard'][0]);
+    //unset($keyboard_manage_list['keyboard'][0]);
     $keyboard_manage_list = json_encode($keyboard_manage_list);
+    bot("sendMessage", ['chat_id'=> $chat_id , 'text'=>$keyboard_manage_list]);
     update_step("choosing_subscribed_list");
     $text = "📣 *لیست هایی که شما عضو آن هستید* :
 >میتوانید با کلیک روی لیست مورد نظر آخرین وظایف افزوده شده را مشاهده کنید یا به آن اضافه کنید\.";
