@@ -216,12 +216,27 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_cancel
     ]);
 } else if ($text == "🔔 لیست‌های عضو شده") {
-
-
-    $text = "🔔 این بخش برای مدیریت لیست‌های شما طراحی شده است.\n\n🔹 هنوز لیست جدیدی ایجاد نشده‌است.";
+    //get all user subscribed list and show as keyboard:
+    $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
+    if (isset($user_subscription[0])) {
+        //if user has lists
+        // Append user lists directly to the keyboard
+        foreach ($user_subscription as $list) {
+            $keyboard_manage_list['keyboard'][] = [['text' => "📂 " . $list['list_name']]];
+        }
+    }
+    //unset new-list keyboard button:
+    unset($keyboard_manage_list['keyboard'][0][0]);
+    $keyboard_manage_list = json_encode($keyboard_manage_list);
+    update_step("choosing_subscribed_list");
+    $text = "📣 *لیست هایی که شما عضو آن هستید* :
+>میتوانید با کلیک روی لیست مورد نظر آخرین وظایف افزوده شده را مشاهده کنید یا به آن اضافه کنید\.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
-        'text' => $text
+        'text' => $text,
+        'parse_mode' => "MarkdownV2",
+        'reply_markup' => $keyboard_manage_list
+
     ]);
 } else if ($text == "🔙 بازگشت به منوی اصلی") {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
@@ -273,11 +288,6 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_manage_list
     ]);
-
-
-
-
-
 } else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
     bot("sendMessage", [
