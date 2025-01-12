@@ -247,12 +247,28 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_start
     ]);
 } else if ($text == "➕ افزودن وظیفه") {
-    $text = "✏️ لطفاً عنوان وظیفه جدید خود را وارد کنید:";
-    update_step("add_task");
+    //get all user subscribed list and show as keyboard:
+    $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers sub JOIN tbl_notification_lists nlist ON sub.list_id=nlist.id WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
+    if (isset($user_subscription[0])) {
+        //if user has lists
+        // Append user lists directly to the keyboard
+        foreach ($user_subscription as $list) {
+            $keyboard_manage_list['keyboard'][] = [['text' => "📂 " . $list['list_name']]];
+        }
+    }
+
+    //unset new-list keyboard button:
+    array_shift($keyboard_manage_list['keyboard'][0]);
+    $keyboard_manage_list = json_encode($keyboard_manage_list);
+    update_step("choosing_subscribed_list");
+    $text = "📣 *لیست هایی که شما عضو آن هستید* :
+>میتوانید با کلیک روی لیست مورد نظر آخرین وظایف افزوده شده را مشاهده کنید یا به آن اضافه کنید\.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
         'text' => $text,
-        'reply_markup' => $keyboard_cancel
+        'parse_mode' => "MarkdownV2",
+        'reply_markup' => $keyboard_manage_list
+
     ]);
 } else if ($user_step == "add_task") {
 
