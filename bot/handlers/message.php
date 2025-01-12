@@ -217,7 +217,7 @@ if ($text == "/start") {
     ]);
 } else if ($text == "🔔 لیست‌های عضو شده") {
     //get all user subscribed list and show as keyboard:
-    $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
+    $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers sub JOIN tbl_notification_lists nlist ON sub.list_id=nlist.id WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
     if (isset($user_subscription[0])) {
         //if user has lists
         // Append user lists directly to the keyboard
