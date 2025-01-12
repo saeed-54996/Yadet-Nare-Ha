@@ -1,6 +1,6 @@
 <?php
 
-require_once '.bot/functions/jdf.php'; //jdf library
+require_once __DIR__.'/jdf.php'; //jdf library
 
 /**
  * Convert a Jalali date and time to Unix timestamp (UTC).
