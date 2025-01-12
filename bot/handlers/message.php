@@ -11,8 +11,8 @@ $message_id = $update["message"]['message_id'] ?? null;
 //===============                             =============
 
 //===============  Include functions:  =============
-require __DIR__.'/../functions/init-user.php'; // Init User system on start
-require __DIR__.'/../functions/jalaliToUnix.php'; // Include jalaliToUnix function
+require __DIR__ . '/../functions/init-user.php'; // Init User system on start
+require __DIR__ . '/../functions/jalaliToUnix.php'; // Include jalaliToUnix function
 
 //========================  Keyboards:  ==========================
 //========= keyboard_start: =========
@@ -128,10 +128,7 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_manage_list
     ]);
-
-
-
-} else if ($user_step == "choosing_list" && (preg_match("/📂 /", $text) || $text == "🔙 بازگشت")){
+} else if ($user_step == "choosing_list" && (preg_match("/📂 /", $text) || $text == "🔙 بازگشت")) {
     if (preg_match("/📂 /", $text)) {
         $text = str_replace("📂 ", "", $text);
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
@@ -142,8 +139,8 @@ if ($text == "/start") {
                 'text' => $text,
                 'reply_markup' => [
                     'inline_keyboard' => [
-                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_'.$db_list['id']],['text' => '🗑 حذف لیست', 'callback_data' => "delete_".$db_list['id']]],
-                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_'.$db_list['id']]],
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_" . $db_list['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list['id']]],
                         [['text' => '🔙 Back', 'callback_data' => 'back_action']],
                     ]
                 ]
@@ -173,8 +170,6 @@ if ($text == "/start") {
             'reply_markup' => $keyboard_list
         ]);
     }
-
-
 } else if ($text == "➕ لیست جدید" || $user_step == "create_list") {
 
     if ($text == "لغو عملیات ❌") {
@@ -186,8 +181,22 @@ if ($text == "/start") {
 
 
     if ($user_step == "create_list") {
+        //check if the list name is repeated from user list:
+        $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
+        if (isset($db_list[0])) {
+            update_step(null);
+            $text = "🔗 لیست $text قبلا ایجاد شده است.";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'reply_markup' => $keyboard_list
+            ]);
+            exit();
+        }
         //create new list
         $db->q("INSERT INTO tbl_notification_lists (list_name, list_owner_id) VALUES (?, (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id]);
+        //add user as subscriber to the list:
+        $db->q("INSERT INTO tbl_list_subscribers (list_id, user_id) VALUES ((SELECT id FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)), (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id, $tg_id]);
         update_step(null);
         $text = "🔗 لیست جدید با نام $text ایجاد شد.";
         bot("sendMessage", [
@@ -206,11 +215,6 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_cancel
     ]);
-
-
-
-
-
 } else if ($text == "🔔 لیست‌های عضو شده") {
 
 
@@ -228,10 +232,52 @@ if ($text == "/start") {
     ]);
 } else if ($text == "➕ افزودن وظیفه") {
     $text = "✏️ لطفاً عنوان وظیفه جدید خود را وارد کنید:";
+    update_step("add_task");
     bot("sendMessage", [
         'chat_id' => $chat_id,
-        'text' => $text
+        'text' => $text,
+        'reply_markup' => $keyboard_cancel
     ]);
+} else if ($user_step == "add_task") {
+
+    //get user lists
+    $db_lists = $db->q("SELECT 
+    l.id,
+    l.list_name,
+    l.list_lastest_update,
+    l.list_created_at,
+    l.is_deleted,
+    l.task_adding_rule
+    FROM 
+    tbl_notification_lists l
+    JOIN 
+    tbl_users u 
+    ON 
+    l.list_owner_id = u.id
+    WHERE 
+    u.tg_id = ? AND l.is_deleted = 0;", [$tg_id]);
+
+    if (isset($db_lists[0])) {
+        //if user has lists
+        // Append user lists directly to the keyboard
+        foreach ($db_lists as $list) {
+            $keyboard_manage_list['keyboard'][] = [['text' => "📂 " . $list['list_name']]];
+        }
+    }
+    $keyboard_manage_list = json_encode($keyboard_manage_list);
+
+    $text = "لیست خود را انتخاب کنید یا یکی اضافه کنید:";
+    update_step("choosing_list");
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_manage_list
+    ]);
+
+
+
+
+
 } else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
     bot("sendMessage", [
