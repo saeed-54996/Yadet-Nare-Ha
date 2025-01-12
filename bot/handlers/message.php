@@ -131,7 +131,7 @@ if ($text == "/start") {
 
 
 
-} else if ($user_step == "choosing_list" && preg_match("/📂 /", $text)){
+} else if ($user_step == "choosing_list" && (preg_match("/📂 /", $text) || $text == "🔙 بازگشت")){
     if (preg_match("/📂 /", $text)) {
         $text = str_replace("📂 ", "", $text);
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
@@ -156,7 +156,16 @@ if ($text == "/start") {
                 'reply_markup' => $keyboard_list
             ]);
         }
+    } else if ($text == "🔙 بازگشت") {
+        update_step(null);
+        $text = "🔙 شما به منوی قبلی بازگشتید.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'reply_markup' => $keyboard_list
+        ]);
     } else {
+        update_step(null);
         $text = "🔗 لطفا یکی از لیست‌های خود را انتخاب کنید.";
         bot("sendMessage", [
             'chat_id' => $chat_id,
