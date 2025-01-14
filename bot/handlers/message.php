@@ -239,13 +239,7 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_manage_list
 
     ]);
-} else if ($text == "🔙 بازگشت به منوی اصلی") {
-    $text = "🔙 شما به منوی اصلی بازگشتید.";
-    bot("sendMessage", [
-        'chat_id' => $chat_id,
-        'text' => $text,
-        'reply_markup' => $keyboard_start
-    ]);
+
 } else if ($text == "➕ افزودن وظیفه") {
     //get all user subscribed list and show as keyboard:
     $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers sub JOIN tbl_notification_lists nlist ON sub.list_id=nlist.id WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
@@ -378,7 +372,7 @@ if ($text == "/start") {
             'reply_markup' => $keyboard_cancel
         ]);
     }
-} else if (($text == "🔙 بازگشت به منوی اصلی" || $text == "🔙 بازگشت") && $user_step == null) {
+} else if (($text == "🔙 بازگشت به منوی اصلی" || $text == "🔙 بازگشت")) {
     $text = "🔙 شما به منوی اصلی بازگشتید.";
     bot("sendMessage", [
         'chat_id' => $chat_id,
