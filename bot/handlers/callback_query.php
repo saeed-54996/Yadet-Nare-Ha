@@ -47,6 +47,7 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
         $text = "تعداد $list_tasks_count وظیفه ناتمام برای این لیست وجود دارد.";
         bot("editMessageText", [
             'chat_id' => $chat_id,
+            'message_id' => $message_id,
             'text' => $text,
             'reply_markup' => [
                 'inline_keyboard' => [
@@ -59,7 +60,8 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
         else{
             $text = "هیچ وظیفه ای برای این لیست وجود ندارد";
             bot("editMessageText", [
-                'inline_message_id' => $callback_id,
+                'chat_id' => $chat_id,
+                'message_id' => $message_id,
                 'text' => $text,
                 'reply_markup' => [
                     'inline_keyboard' => [
