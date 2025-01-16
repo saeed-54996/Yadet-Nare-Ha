@@ -217,7 +217,6 @@ if ($text == "/start") {
     ]);
 } else if ($text == "🔔 لیست‌های عضو شده" || $user_step == "choosing_subscribed_list") {
     if (preg_match("/📂 /", $text) && $user_step == "choosing_subscribed_list") {
-        bot('SendMessage',['chat_id'=>$chat_id,'text'=>'entered the choosing section']);
         $text = str_replace("📂 ", "", $text);
         // getting all user subscribed list:
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND id IN (SELECT list_id FROM tbl_list_subscribers WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id]);
@@ -229,7 +228,6 @@ if ($text == "/start") {
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [['text' => 'مشاهده وظایف 📋', 'callback_data' => 'view_tasks_' . $db_list['id']], ['text' => 'افزودن وظیفه ➕', 'callback_data' => "add_task_" . $db_list['id']]],
-                        [['text' => '🔙 Back', 'callback_data' => 'back_action']],
                     ]
                 ]
             ]);
