@@ -38,7 +38,6 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
 
     if ($order == "view_tasks") {
         
-        $list_id = $order;
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ?", [$list_id]);
         
         if($list_tasks[0]){
@@ -65,13 +64,26 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
                 'text' => $text,
                 'reply_markup' => [
                     'inline_keyboard' => [
-                        [['text' => 'بازگشت به لیست ها', 'callback_data' => 'view_list_'.$list_id]],
+                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_'.$list_id]],
                     ]
                 ]
             ]);
         }
     }
-
+    else if($order == "view_list"){
+        $text = "🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => 'مشاهده وظایف 📋', 'callback_data' => 'view_tasks_' . $list_id], ['text' => 'افزودن وظیفه ➕', 'callback_data' => "add_task_" . $list_id]],
+                    [['text' => '📦 گزینه های بیشتر', 'callback_data' => 'more_options_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
 
 
 }
