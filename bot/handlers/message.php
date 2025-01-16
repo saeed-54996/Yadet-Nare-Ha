@@ -228,7 +228,7 @@ if ($text == "/start") {
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [['text' => 'مشاهده وظایف 📋', 'callback_data' => 'view_tasks_' . $db_list['id']], ['text' => 'افزودن وظیفه ➕', 'callback_data' => "add_task_" . $db_list['id']]],
-                        [['text' => '📦 گزینه های بیشتر', 'callback_data' => 'more_options_.' $db_list['id']]],
+                        [['text' => '📦 گزینه های بیشتر', 'callback_data' => 'more_options_.' . $db_list['id']]],
                     ]
                 ]
             ]);
