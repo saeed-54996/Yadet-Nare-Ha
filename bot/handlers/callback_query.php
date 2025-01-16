@@ -59,7 +59,7 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
         else{
             $text = "هیچ وظیفه ای برای این لیست وجود ندارد";
             bot("editMessageText", [
-                'chat_id' => $chat_id,
+                'inline_message_id' => $callback_id,
                 'text' => $text,
                 'reply_markup' => [
                     'inline_keyboard' => [
