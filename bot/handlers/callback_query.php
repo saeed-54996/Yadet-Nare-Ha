@@ -71,7 +71,9 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
         }
     }
     else if($order == "view_list"){
-        $text = "🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+        $list_info = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?", [$list_id]);
+        $list_name = $list_info[0]['list_name'];
+        $text = "📂 لیست $list_name انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
         bot("editMessageText", [
             'chat_id' => $chat_id,
             'message_id' => $message_id,
