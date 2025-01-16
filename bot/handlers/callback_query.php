@@ -29,7 +29,7 @@ require __DIR__ . '/../functions/global.php'; // Include global functions
 
 
 
-adminm($content);
+//adminm($content);
 
 if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
 
