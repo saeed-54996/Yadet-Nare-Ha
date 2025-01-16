@@ -220,8 +220,8 @@ if ($text == "/start") {
         $text = str_replace("📂 ", "", $text);
         // getting all user subscribed list:
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND id IN (SELECT list_id FROM tbl_list_subscribers WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id]);
-        adminm(json_encode($db_list));
         if (isset($db_list[0])) {
+            $db_list = $db_list[0];
             $text = "📂 لیست $text انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
             bot("sendMessage", [
                 'chat_id' => $chat_id,
