@@ -218,6 +218,7 @@ if ($text == "/start") {
 } else if ($text == "🔔 لیست‌های عضو شده" || $user_step == "choosing_subscribed_list") {
     if (preg_match("/📂 /", $text && $user_step == "choosing_subscribed_list")) {
         $text = str_replace("📂 ", "", $text);
+        // getting all user subscribed list:
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND id IN (SELECT list_id FROM tbl_list_subscribers WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?))", [$text, $tg_id]);
         if (isset($db_list[0])) {
             $text = "📂 لیست $text انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
@@ -239,6 +240,15 @@ if ($text == "/start") {
                 'reply_markup' => $keyboard_list
             ]);
         }
+        exit();
+    } else if ($text == "🔙 بازگشت") {
+        update_step(null);
+        $text = "🔙 شما به منوی اصلی بازگشتید.";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'text' => $text,
+            'reply_markup' => $keyboard_start
+        ]);
         exit();
     }
     //get all user subscribed list and show as keyboard:
@@ -264,7 +274,6 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_manage_list
 
     ]);
-
 } else if ($text == "➕ افزودن وظیفه") {
     //get all user subscribed list and show as keyboard:
     $user_subscription = $db->q("SELECT * FROM tbl_list_subscribers sub JOIN tbl_notification_lists nlist ON sub.list_id=nlist.id WHERE user_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$tg_id]);
