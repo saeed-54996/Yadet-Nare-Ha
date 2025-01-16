@@ -13,6 +13,7 @@ $message_id = $update["message"]['message_id'] ?? null;
 //===============  Include functions:  =============
 require __DIR__ . '/../functions/init-user.php'; // Init User system on start
 require __DIR__ . '/../functions/jalaliToUnix.php'; // Include jalaliToUnix function
+require __DIR__ . '/../functions/global.php'; // Include global functions
 
 //========================  Keyboards:  ==========================
 //========= keyboard_start: =========
