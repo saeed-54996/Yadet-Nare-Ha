@@ -335,6 +335,17 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_manage_list
     ]);
+} else if (preg_match('/^(add_task_to_list)_([0-9]+)$/',$user_step,$matches)){
+    // $order = $matches[1];
+    // $list_id = $matches[2];
+
+    // $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
+    // $text = "🔸نام تسک مورد نظر خود را وارد کنید:";
+    // bot("sendMessage", [
+    //     'chat_id' => $chat_id,
+    //     'text' => $text,
+    // ]);
+
 } else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
     bot("sendMessage", [
