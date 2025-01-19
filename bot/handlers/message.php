@@ -8,6 +8,10 @@ $first_name = $update["message"]['from']['first_name'] ?? null;
 $last_name = $update["message"]['from']['last_name'] ?? null;
 $tg_id = $update["message"]['from']['id'] ?? null;
 $message_id = $update["message"]['message_id'] ?? null;
+
+//replied message:
+$replied_message_id = $update['message']['reply_to_message']['message_id'] ?? null;
+$replied_chat_id = $update['message']['reply_to_message']['chat']['id'] ?? null;
 //===============                             =============
 
 //===============  Include functions:  =============
@@ -336,15 +340,31 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_manage_list
     ]);
 } else if (preg_match('/^(add_task_to_list)_([0-9]+)$/',$user_step,$matches)){
-    // $order = $matches[1];
-    // $list_id = $matches[2];
+    $order = $matches[1];
+    $list_id = $matches[2];
 
-    // $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
-    // $text = "🔸نام تسک مورد نظر خود را وارد کنید:";
-    // bot("sendMessage", [
-    //     'chat_id' => $chat_id,
-    //     'text' => $text,
-    // ]);
+    $res = $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
+    adminm(json_encode($res));
+    $text = "🔹بسیار عالی\!\!  
+گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
+~🟢 **گام 1**: افزودن نام برای وظیفه  ~
+🟡 **گام 2**: افزودن توضیحات وظیفه  
+⚪️ **گام 3**: افزودن تاریخ وظیفه  
+\_\_\_  
+> 🔵 **توضیحات اضافه مربوط به وظیفه خود را وارد کنید**\.
+";
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2",
+            'force_reply' => true,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 لغو و بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
 
 } else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
