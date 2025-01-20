@@ -93,7 +93,6 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 $time = $task_date['H'] . ":" . $task_date['M'];
                 $dateTime = $time . " " . $date;
             }
-            //$task_date = date("Y/m/d", $task_date);
 $text .= "🔹 وظیفه: $task_name
 📄 توضیحات: 
 $task_description
@@ -111,6 +110,38 @@ $dateTime
         ]);
     }   
     
+    else if($order = "view_30_tasks"){
+        $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 ORDER BY id ASC LIMIT 30", [$list_id]);
+
+        foreach($list_tasks as $task){
+            $task_id = $task['id'];
+            $task_name = $task['task_name'];
+            $task_description = $task['task_description'] ?? "<blockquote>📂 بدون توضیحات</blockquote>";
+            $task_date = $task['task_date'] ?? null;
+            $dateTime = "<blockquote>📅 بدون تاریخ</blockquote>";
+            if($task_date){
+                $task_date = convertToJalaliWithDateTime($task_date);
+                $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
+                $time = $task_date['H'] . ":" . $task_date['M'];
+                $dateTime = $time . " " . $date;
+            }
+$text .= "🔹 وظیفه: $task_name
+📄 توضیحات: 
+$task_description
+📆 تاریخ:
+$dateTime
+🔗 <a href='https://t.me/TaskManagerBot?start=edit_task_$task_id'>ویرایش</a>
+----------
+";
+        }
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'parse_mode' => 'HTML'
+        ]);
+    }
+
     
     else if ($order == "view_list") {
         update_step("choosing_subscribed_list");
