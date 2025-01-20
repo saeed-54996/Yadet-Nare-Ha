@@ -78,7 +78,23 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
     } 
     
     
-    
+    else if ($order == "view_10_tasks"){
+        $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 LIMIT 10 ORDER bY id ASC", [$list_id]);
+
+        foreach($list_tasks as $task){
+            $task_id = $task['id'];
+            $task_name = $task['task_name'];
+            $task_description = $task['task_description'];
+            $task_date = $task['task_date'];
+            //$task_date = date("Y/m/d", $task_date);
+            $text .= "🔹 وظیفه: $task_name\n🔸 توضیحات: $task_description\n🔹 تاریخ: $task_date\n\n";
+        }
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+        ]);
+    }   
     
     
     else if ($order == "view_list") {
