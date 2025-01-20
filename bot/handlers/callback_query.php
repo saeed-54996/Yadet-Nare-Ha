@@ -92,7 +92,7 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 $task_date = convertToJalaliWithDateTime($task_date);
                 $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
                 $time = $task_date['H'] . ":" . $task_date['M'];
-                $dateTime = $time . " " . $date;
+                $dateTime = $date . " " . $time;
             }
 $text .= "🔹 وظیفه: $task_name
 📄 توضیحات: 
