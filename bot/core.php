@@ -3,6 +3,7 @@
 $config = require './config.php';
 define('BOT_TOKEN', $config['bot_token']);
 define('ADMIN_ID', $config['admin_id']);
+define('ENCRYPTION_KEY', $config['encryption_key']);
 define('API_URL', 'https://api.telegram.org/bot' . BOT_TOKEN . '/');
 
 function bot($method, $parameters = []) {

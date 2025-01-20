@@ -8,4 +8,5 @@ return [
     ],
     'bot_token' => 'YOUR_TELEGRAM_BOT_TOKEN_HERE',
     'admin_id' => 'ADMIN_ID',
+    'encryption_key' => 'KEY'
 ];
