@@ -343,16 +343,19 @@ if ($text == "/start") {
     $order = $matches[1];
     $list_id = $matches[2];
 
-    $res = $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
-    adminm(json_encode($res));
+    $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
+    
     $text = "🔹بسیار عالی\!\!  
-گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
-~🟢 **گام 1**: افزودن نام برای وظیفه  ~
-🟡 **گام 2**: افزودن توضیحات وظیفه  
-⚪️ **گام 3**: افزودن تاریخ وظیفه  
-\_\_\_  
-> 🔵 **توضیحات اضافه مربوط به وظیفه خود را وارد کنید**\.
-";
+    ادامه گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
+    ~🟢 **گام 1**: افزودن نام برای وظیفه  ~
+    🟡 **گام 2**: افزودن توضیحات وظیفه  
+    ⚪️ **گام 3**: افزودن تاریخ وظیفه  
+    \_\_\_  
+    > 🔵 **توضیحات اضافه مربوط به وظیفه خود را وارد کنید**\.
+    ";
+    $task = $db->q("SELECT * FROM tbl_tasks WHERE task_name = ? AND list_id = ? ORDER BY id DESC LIMIT 1",[$text,$list_id]);
+    
+    update_step("add_des_to_task_".$task[0]['id']."_".$list_id);
         bot("sendMessage", [
             'chat_id' => $chat_id,
             'message_id' => $message_id,
@@ -365,6 +368,87 @@ if ($text == "/start") {
                 ]
             ]
         ]);
+
+} else if (preg_match('/^(add_des_to_task)_([0-9]+)_([0-9]+)$/',$user_step,$matches)){
+    $order = $matches[1];
+    $task_id = $matches[2];
+    $list_id = $matches[3];
+
+    $db->q("UPDATE tbl_tasks SET task_description = ? WHERE id = ?", [$text, $task_id]);
+
+    $text = "🔹بسیار عالی\!\!  
+    ادامه گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
+    ~🟢 **گام 1**: افزودن نام برای وظیفه  ~
+    ~🟢 **گام 2**: افزودن توضیحات وظیفه  ~
+    🟡 **گام 3**: افزودن تاریخ وظیفه  
+    \_\_\_  
+    >  🔵 **تاریخ مورد نظر خود را با فرمت زیر وارد کنید:**
+    >   1403/07/02-14:30
+    ";
+    
+    update_step("add_date_to_task_".$task_id."_".$list_id);
+        bot("sendMessage", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'parse_mode' => "MarkdownV2",
+            'force_reply' => true,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 لغو و بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+} else if (preg_match('/^(add_date_to_task)_([0-9]+)_([0-9]+)$/',$user_step,$matches)){
+    $order = $matches[1];
+    $task_id = $matches[2];
+    $list_id = $matches[3];
+
+$pattern = '/^
+    (1[45][0-9]{2})          # گروه 1: سال (1400 تا 1599)
+    \/                       # جداکننده برای تاریخ
+    (0[1-9]|1[0-2])          # گروه 2: ماه (01 تا 12)
+    \/                       # جداکننده برای تاریخ
+    (0[1-9]|[12][0-9]|3[01]) # گروه 3: روز (01 تا 31)
+    -                        # جداکننده بین تاریخ و ساعت
+    (0[0-9]|1[0-9]|2[0-3])   # گروه 4: ساعت (00 تا 23)
+    :                        # جداکننده برای ساعت
+    ([0-5][0-9])             # گروه 5: دقیقه (00 تا 59)
+/x';
+
+if (preg_match($pattern, $text, $matches)) {
+    $year = $matches[1];
+    $month = $matches[2];
+    $day = $matches[3];
+    $hour = $matches[4];
+    $minute = $matches[5];
+
+
+    $unix_time = jalaliToUnix("$year/$month/$day", "$hour:$minute");
+
+    $db->q("UPDATE tbl_tasks SET task_date = ? WHERE id = ?", [$unix_time, $task_id]);
+
+    $text = "🔗 وظیفه با موفقیت اضافه شد\.";
+    update_step(null);
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'text' => $text,
+        'reply_markup' => $keyboard_start
+    ]);
+}
+else {
+    $text = "✍️ لطفا تاریخ و ساعت را با فرمت صحیح وارد کنید\.
+مثال:
+1403/07/02-14:30
+";
+    bot("sendMessage", [
+        'chat_id' => $chat_id,
+        'message_id' => $message_id,
+        'text' => $text,
+        'parse_mode' => "MarkdownV2",
+        'force_reply' => true,
+    ]);
+}
 
 } else if ($text == "👥 مدیریت کاربران") {
     $text = "👤 این بخش برای مدیریت کاربران شما طراحی شده است.\n\n🔹 هنوز کاربران جدیدی اضافه نشده‌اند.";
