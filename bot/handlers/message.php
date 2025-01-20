@@ -354,8 +354,7 @@ if ($text == "/start") {
 > 🔵 **توضیحات اضافه مربوط به وظیفه خود را وارد کنید**\.
     ";
     $task = $db->q("SELECT * FROM tbl_tasks WHERE task_name = ? AND list_id = ? ORDER BY id DESC LIMIT 1",[$text,$list_id]);
-    adminm(json_encode($task));
-    update_step("add_des_to_task_".$task['id']."_".$list_id);
+    update_step("add_des_to_task_".$task[0]['id']."_".$list_id);
         bot("sendMessage", [
             'chat_id' => $chat_id,
             'message_id' => $message_id,
