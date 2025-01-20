@@ -80,17 +80,19 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
     
     else if ($order == "view_10_tasks"){
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 ORDER BY id ASC LIMIT 10", [$list_id]);
-        adminm(json_encode($list_tasks));
 
         foreach($list_tasks as $task){
             $task_id = $task['id'];
             $task_name = $task['task_name'];
             $task_description = $task['task_description'];
-            $task_date = $task['task_date'];
-            $task_date = convertToJalaliWithDateTime($task_date);
-            $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
-            $time = $task_date['H'] . ":" . $task_date['M'];
-            $dateTime = $date . " " . $time;
+            $task_date = $task['task_date'] ?? null;
+            $dateTime = null;
+            if($task_date){
+                $task_date = convertToJalaliWithDateTime($task_date);
+                $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
+                $time = $task_date['H'] . ":" . $task_date['M'];
+                $dateTime = $time . " " . $date;
+            }
             //$task_date = date("Y/m/d", $task_date);
             $text .= "🔹 وظیفه: $task_name\n🔸 توضیحات: $task_description\n🔹 تاریخ: $dateTime\n\n----------\n";
         }
