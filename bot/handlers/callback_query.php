@@ -94,7 +94,7 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 $dateTime = $time . " " . $date;
             }
             //$task_date = date("Y/m/d", $task_date);
-            $text .= "🔹 وظیفه: $task_name\n📄 توضیحات: $task_description\n📆 تاریخ: $dateTime\n\n----------\n";
+            $text .= "🔹 وظیفه: $task_name\n📄 توضیحات: \n$task_description\n📆 تاریخ:\n $dateTime\n\n----------\n";
         }
         bot("sendMessage", [
             'chat_id' => $chat_id,
