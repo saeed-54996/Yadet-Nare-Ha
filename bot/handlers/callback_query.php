@@ -94,14 +94,14 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 $dateTime = $time . " " . $date;
             }
             //$task_date = date("Y/m/d", $task_date);
-            $text .= "🔹 وظیفه: $task_name
-            📄 توضیحات: 
-            $task_description
-            📆 تاریخ:
-             $dateTime
-             
-             ----------
-             ";
+$text .= "🔹 وظیفه: $task_name
+📄 توضیحات: 
+$task_description
+📆 تاریخ:
+$dateTime
+🔗 <a href='https://t.me/TaskManagerBot?start=edit_task_$task_id'>ویرایش</a> | <a href='https://t.me/TaskManagerBot?start=delete_task_$task_id'>حذف</a>
+----------
+";
         }
         bot("sendMessage", [
             'chat_id' => $chat_id,
