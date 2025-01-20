@@ -427,7 +427,7 @@ if (preg_match($pattern, $text, $matches)) {
 
     $db->q("UPDATE tbl_tasks SET task_date = FROM_UNIXTIME(?) WHERE id = ?", [$unix_time, $task_id]);
 
-    $text = "🔗 وظیفه با موفقیت اضافه شد\.";
+    $text = "🔗 وظیفه با موفقیت اضافه شد.";
     update_step(null);
     bot("sendMessage", [
         'chat_id' => $chat_id,
