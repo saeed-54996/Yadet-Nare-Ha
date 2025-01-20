@@ -355,7 +355,7 @@ if ($text == "/start") {
     ";
     $task = $db->q("SELECT * FROM tbl_tasks WHERE task_name = ? AND list_id = ? ORDER BY id DESC LIMIT 1",[$text,$list_id]);
     
-    update_step("add_des_to_task_".$task[0]['id']."_".$list_id);
+    update_step("add_des_to_task_".$task['id']."_".$list_id);
         bot("sendMessage", [
             'chat_id' => $chat_id,
             'message_id' => $message_id,
@@ -383,7 +383,7 @@ if ($text == "/start") {
     🟡 **گام 3**: افزودن تاریخ وظیفه  
     \_\_\_  
     >  🔵 **تاریخ مورد نظر خود را با فرمت زیر وارد کنید:**
-    >   1403/07/02-14:30
+    >   1403\/07\/02\-14:30
     ";
     
     update_step("add_date_to_task_".$task_id."_".$list_id);
