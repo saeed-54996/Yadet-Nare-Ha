@@ -99,7 +99,7 @@ $text .= "🔹 وظیفه: $task_name
 $task_description
 📆 تاریخ:
 $dateTime
-🔗 <a href='https://t.me/YadetNareHa_robot?start=".encrypt("edit_task_$task_id").".'>ویرایش</a>
+🔗 <a href='https://t.me/YadetNareHa_robot?start=".encrypt("edit_task_$task_id")."'>ویرایش</a>
 ----------
 ";
         }
