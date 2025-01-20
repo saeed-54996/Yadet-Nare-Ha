@@ -425,7 +425,7 @@ if (preg_match($pattern, $text, $matches)) {
 
     $unix_time = jalaliToUnix("$year/$month/$day", "$hour:$minute");
 
-    $db->q("UPDATE tbl_tasks SET task_date = ? WHERE id = ?", [$unix_time, $task_id]);
+    $db->q("UPDATE tbl_tasks SET task_date = FROM_UNIXTIME(?) WHERE id = ?", [$unix_time, $task_id]);
 
     $text = "🔗 وظیفه با موفقیت اضافه شد\.";
     update_step(null);
