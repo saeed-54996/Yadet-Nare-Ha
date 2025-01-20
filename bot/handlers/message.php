@@ -144,8 +144,8 @@ if ($text == "/start") {
                 'text' => $text,
                 'reply_markup' => [
                     'inline_keyboard' => [
-                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_" . $db_list['id']]],
-                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list['id']]],
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_" . $db_list[0]['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
                         [['text' => '🔙 Back', 'callback_data' => 'back_action']],
                     ]
                 ]
