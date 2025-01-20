@@ -38,3 +38,34 @@ function jalaliToUnix(string $jalaliDate, string $time): int
 
 // $unixTimestamp = jalaliToUnix($jalaliDate, $time);
 // echo "$unixTimestamp";
+
+
+
+function convertToJalaliWithDateTime($gregorianDateTime) {
+    // Parse the received Gregorian date and time
+    $dateTime = new DateTime($gregorianDateTime, new DateTimeZone('UTC')); // Assuming the time is in UTC
+    $dateTime->setTimezone(new DateTimeZone('Asia/Tehran')); // Convert to Iran time
+
+    // Get the Gregorian date in year, month, day, hour, minute
+    $gy = $dateTime->format('Y');
+    $gm = $dateTime->format('m');
+    $gd = $dateTime->format('d');
+    $hour = $dateTime->format('H');
+    $minute = $dateTime->format('i');
+
+    // Convert to Jalali
+    list($jy, $jm, $jd) = gregorian_to_jalali((int)$gy, (int)$gm, (int)$gd);
+
+    // Return the result as an associative array
+    return [
+        'Y' => $jy,
+        'M' => $jm,
+        'D' => $jd,
+        'H' => $hour,
+        'M' => $minute
+    ];
+}
+
+// Example Usage:
+// $gregorianDateTime = "2025-01-24 11:00:00"; // Example date and time received from database
+// $jalaliDateTimeArray = convertToJalaliWithDateTime($gregorianDateTime);
