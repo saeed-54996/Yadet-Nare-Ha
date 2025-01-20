@@ -437,8 +437,8 @@ if (preg_match($pattern, $text, $matches)) {
 }
 else {
     $text = "✍️ لطفا تاریخ و ساعت را با فرمت صحیح وارد کنید\.
-مثال:
-1403/07/02-14:30
+>مثال:
+>1403\/07\/02\-14:30
 ";
     bot("sendMessage", [
         'chat_id' => $chat_id,
