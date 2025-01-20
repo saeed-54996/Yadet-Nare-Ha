@@ -84,9 +84,9 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
         foreach($list_tasks as $task){
             $task_id = $task['id'];
             $task_name = $task['task_name'];
-            $task_description = $task['task_description'];
+            $task_description = $task['task_description'] ?? "📂 بدون توضیحات";
             $task_date = $task['task_date'] ?? null;
-            $dateTime = null;
+            $dateTime = "📅 بدون تاریخ";
             if($task_date){
                 $task_date = convertToJalaliWithDateTime($task_date);
                 $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
@@ -94,7 +94,7 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 $dateTime = $time . " " . $date;
             }
             //$task_date = date("Y/m/d", $task_date);
-            $text .= "🔹 وظیفه: $task_name\n🔸 توضیحات: $task_description\n🔹 تاریخ: $dateTime\n\n----------\n";
+            $text .= "🔹 وظیفه: $task_name\n📄 توضیحات: $task_description\n📆 تاریخ: $dateTime\n\n----------\n";
         }
         bot("sendMessage", [
             'chat_id' => $chat_id,
