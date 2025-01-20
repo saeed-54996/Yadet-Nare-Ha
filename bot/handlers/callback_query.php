@@ -38,7 +38,7 @@ function update_step($step)
 
 //adminm($content);
 
-if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
+if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
 
     $order = $matches[1];
     $list_id = $matches[2];
