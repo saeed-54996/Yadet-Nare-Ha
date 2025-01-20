@@ -345,7 +345,7 @@ if ($text == "/start") {
 
     $db->q("INSERT INTO tbl_tasks (task_name, list_id) VALUES (?, ?)", [$text, $list_id]);
     
-    $text = "🔹بسیار عالی\!\!  
+    $mtext = "🔹بسیار عالی\!\!  
 ادامه گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
 ~🟢 **گام 1**: افزودن نام برای وظیفه  ~
 🟡 **گام 2**: افزودن توضیحات وظیفه  
@@ -359,7 +359,7 @@ if ($text == "/start") {
         bot("sendMessage", [
             'chat_id' => $chat_id,
             'message_id' => $message_id,
-            'text' => $text,
+            'text' => $mtext,
             'parse_mode' => "MarkdownV2",
             'force_reply' => true,
             'reply_markup' => [
