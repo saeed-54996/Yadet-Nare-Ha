@@ -80,6 +80,7 @@ if (preg_match('/^([a-z_]+)_(\d+)$/', $cdata, $matches)) {
     
     else if ($order == "view_10_tasks"){
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 LIMIT 10 ORDER bY id ASC", [$list_id]);
+        adminm(json_encode($list_tasks));
 
         foreach($list_tasks as $task){
             $task_id = $task['id'];
