@@ -87,8 +87,12 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
             $task_name = $task['task_name'];
             $task_description = $task['task_description'];
             $task_date = $task['task_date'];
+            $task_date = convertToJalaliWithDateTime($task_date);
+            $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
+            $time = $task_date['H'] . ":" . $task_date['M'];
+            $dateTime = $date . " " . $time;
             //$task_date = date("Y/m/d", $task_date);
-            $text .= "🔹 وظیفه: $task_name\n🔸 توضیحات: $task_description\n🔹 تاریخ: $task_date\n\n";
+            $text .= "🔹 وظیفه: $task_name\n🔸 توضیحات: $task_description\n🔹 تاریخ: $dateTime\n\n----------\n";
         }
         bot("sendMessage", [
             'chat_id' => $chat_id,
