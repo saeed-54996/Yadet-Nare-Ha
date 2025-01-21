@@ -85,7 +85,7 @@ if ($text == "/start") {
         'reply_markup' => $keyboard_start
     ]);
 
-} else if (preg_match('^\/start ([a-zA-Z0-9+\/=]+)$',$text,$matches)){
+} else if (preg_match('/^\/start ([a-zA-Z0-9+\/=]+)$/',$text,$matches)){
     $order = $matches[1];
     $order = decrypt($order);
     adminm($order);
