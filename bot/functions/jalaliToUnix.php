@@ -62,7 +62,7 @@ function convertToJalaliWithDateTime($gregorianDateTime) {
         'M' => $jm,
         'D' => $jd,
         'H' => $hour,
-        'M' => $minute
+        'min' => $minute
     ];
 }
 
