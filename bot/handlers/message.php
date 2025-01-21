@@ -84,6 +84,67 @@ if ($text == "/start") {
         'text' => $text,
         'reply_markup' => $keyboard_start
     ]);
+
+} else if (preg_match('^\/start ([a-zA-Z0-9+\/=]+)$',$text,$matches)){
+    $order = $matches[1];
+    $order = decrypt($order);
+
+    if (preg_match('/^(edit_task)_(\d+)$/', $order, $matches)) {
+        $task_id = $matches[2];
+        $task = $db->q("SELECT 
+    t.id AS task_id,
+    t.task_name,
+    t.task_description,
+    t.task_date,
+    t.is_end,
+    l.id AS list_id,
+    l.list_name,
+    l.list_owner_id,
+    u.id AS owner_id,
+    u.tg_id
+FROM 
+    tbl_tasks t
+JOIN 
+    tbl_notification_lists l ON t.list_id = l.id
+JOIN 
+    tbl_users u ON l.list_owner_id = u.id
+WHERE 
+    t.id = ?;
+", [$task_id]);
+
+        $sub = $db->q('SELECT * FROM tbl_list_subscribers WHERE user_id = ? AND list_id = ?',[$user_db_id,$task[0]['list_id']]);
+
+        if(!(($task[0]['task_adding_rule'] == 2 && isset($sub[0]))|| $task[0]['tg_id'] == $tg_id)){
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => "شما دسترسی لازم را ندارید!",
+            ]);
+            exit();
+        }
+        if (isset($task[0])) {
+            $task = $task[0];
+            $text = "🔹 وظیفه $task[task_name] انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [['text' => 'تغییر نام وظیفه ✍️', 'callback_data' => 'rename_task_' . $task_id], ['text' => '🗑 حذف وظیفه', 'callback_data' => "delete_task_" . $task_id]],
+                        [['text' => 'تغییر توضیحات وظیفه 📝', 'callback_data' => 'e_task_des_' . $task_id], ['text' => 'تغییر تاریخ وظیفه 📅', 'callback_data' => 'e_task_date_' . $task_id]],
+                        [['text' => '🔙 Back', 'callback_data' => 'back_action']],
+                    ]
+                ]
+            ]);
+        } else {
+            $text = "🔗 وظیفه یافت نشد.";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'reply_markup' => $keyboard_start
+            ]);
+        }
+    }
+
 } else if ($text == "📋 لیست های انتشار") {
     $text = "
     *لطفا انتخاب کنید* 👇
