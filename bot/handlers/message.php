@@ -88,7 +88,7 @@ if ($text == "/start") {
 } else if (preg_match('^\/start ([a-zA-Z0-9+\/=]+)$',$text,$matches)){
     $order = $matches[1];
     $order = decrypt($order);
-
+    adminm($order);
     if (preg_match('/^(edit_task)_(\d+)$/', $order, $matches)) {
         $task_id = $matches[2];
         $task = $db->q("SELECT 
