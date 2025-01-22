@@ -200,21 +200,24 @@ $dateTime
                 ]
             ]
         ]);
-    } else if ($order == "view_lists") {
-        $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
-        if (isset($db_user[0])) {
-            $user_db_id = $db_user[0]['id'];
-        }
-        $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ? AND is_deleted = 0", [$user_db_id]);
-        if ($lists[0]) {
-            $text = "📂 لیست‌های شما:";
-            foreach ($lists as $list) {
-                $list_id = $list['id'];
-                $list_name = $list['list_name'];
-                $text .= "\n🔹 $list_name";
-                $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("view_list_$list_id") . "'>مشاهده</a>";
-                $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
-            }
+    } 
+}
+
+
+else if ($cdata == "view_lists") {
+    $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
+    if (isset($db_user[0])) {
+        $user_db_id = $db_user[0]['id'];
+    }
+    $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ? AND is_deleted = 0", [$user_db_id]);
+    if ($lists[0]) {
+        $text = "📂 لیست‌های شما:";
+        foreach ($lists as $list) {
+            $list_id = $list['id'];
+            $list_name = $list['list_name'];
+            $text .= "\n🔹 $list_name";
+            $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("view_list_$list_id") . "'>مشاهده</a>";
+            $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
         }
     }
 }
