@@ -220,4 +220,10 @@ else if ($cdata == "view_lists") {
             $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
         }
     }
+    bot("editMessageText", [
+        'chat_id' => $chat_id,
+        'message_id' => $message_id,
+        'text' => $text,
+        'parse_mode' => 'HTML',
+    ]);
 }
