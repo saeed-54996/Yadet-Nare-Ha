@@ -563,16 +563,18 @@ WHERE
         ]);
     }
     // Notify all subscribers about the new task
-    $task_info = $db->q("
-        SELECT t.task_name, t.task_description, t.task_date, u.first_name, u.last_name
+    $task_info = $db->q("SELECT t.task_name, t.task_description, t.task_date
         FROM tbl_tasks t
-        JOIN tbl_users u ON t.added_by = u.id
         WHERE t.id = ?", [$task_id]);
 
     $task_name = $task_info[0]['task_name'];
     $task_description = $task_info[0]['task_description'];
     $task_date = $task_info[0]['task_date'];
-    $added_by = $task_info[0]['first_name'] . ' ' . $task_info[0]['last_name'];
+
+    // Get the user who created the task
+    $user_info = $db->q("SELECT first_name, last_name FROM tbl_users WHERE tg_id = ?", [$tg_id]);
+    $user_first_name = $user_info[0]['first_name'];
+    $user_last_name = $user_info[0]['last_name'];
 
     $subscribers = $db->q("
         SELECT u.tg_id 
@@ -583,10 +585,10 @@ WHERE
     foreach ($subscribers as $subscriber) {
         bot("sendMessage", [
             'chat_id' => $subscriber['tg_id'],
-            'text' => "🔔 وظیفه جدیدی به لیست شما اضافه شد.\n\nنام وظیفه: $task_name\nتوضیحات: $task_description\nتاریخ: $task_date\nافزوده شده توسط: $added_by",
+            'text' => "🔔 وظیفه جدیدی به لیست شما اضافه شد توسط $user_first_name $user_last_name.\n\nنام وظیفه: $task_name\nتوضیحات: $task_description\nتاریخ: $task_date",
             'reply_markup' => [
                 'inline_keyboard' => [
-                    [['text' => 'مشاهده 30 وظیفه اخیر 📋', 'callback_data' => 'view_30_tasks_' . $list_id]],
+                    [['text' => 'مشاهده 30 وظیفه اخیر 📋', 'callback_data' => "view_30_tasks_$list_id"]],
                 ]
             ]
         ]);
