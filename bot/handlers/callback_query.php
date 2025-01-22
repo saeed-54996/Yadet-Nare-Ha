@@ -35,8 +35,7 @@ function update_step($step)
 }
 
 
-
-//adminm($content);
+/////////////////////////////////////////////////////////////////////////
 
 if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
 
@@ -76,30 +75,27 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
                 ]
             ]);
         }
-    } 
-    
-    
-    else if($order == "view_30_tasks"){
+    } else if ($order == "view_30_tasks") {
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 ORDER BY task_date ASC , id ASC LIMIT 30", [$list_id]);
 
-        foreach($list_tasks as $task){
+        foreach ($list_tasks as $task) {
             $task_id = $task['id'];
             $task_name = $task['task_name'];
             $task_description = $task['task_description'] ?? "<blockquote>📂 بدون توضیحات</blockquote>";
             $task_date = $task['task_date'] ?? null;
             $dateTime = "<blockquote>📅 بدون تاریخ</blockquote>";
-            if($task_date){
+            if ($task_date) {
                 $task_date = convertToJalaliWithDateTime($task_date);
                 $date = $task_date['Y'] . "/" . $task_date['M'] . "/" . $task_date['D'];
                 $time = $task_date['H'] . ":" . $task_date['min'];
                 $dateTime = $date . " " . $time;
             }
-$text .= "🔹 وظیفه: $task_name
+            $text .= "🔹 وظیفه: $task_name
 📄 توضیحات: 
 $task_description
 📆 تاریخ:
 $dateTime
-🔗 <a href='https://t.me/YadetNareHa_robot?start=".encrypt("edit_task_$task_id")."'>ویرایش</a>
+🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_task_$task_id") . "'>ویرایش</a>
 ----------
 ";
         }
@@ -109,10 +105,7 @@ $dateTime
             'text' => $text,
             'parse_mode' => 'HTML'
         ]);
-    }
-
-    
-    else if ($order == "view_list") {
+    } else if ($order == "view_list") {
         update_step("choosing_subscribed_list");
         $list_info = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?", [$list_id]);
         $list_name = $list_info[0]['list_name'];
@@ -128,10 +121,7 @@ $dateTime
                 ]
             ]
         ]);
-    }
-    
-    
-    else if ($order == "add_task") {
+    } else if ($order == "add_task") {
         update_step("add_task_to_list_" . $list_id);
         $text = "🔹بسیار عالی\!\!  
 گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
@@ -153,13 +143,7 @@ $dateTime
                 ]
             ]
         ]);
-
-    }
-
-
-
-
-    else if ($order == "delete_list") {
+    } else if ($order == "delete_list") {
         $text = "آیا واقعا میخواهید این لیست را حذف کنید؟! 😵";
         bot("editMessageText", [
             'chat_id' => $chat_id,
@@ -167,14 +151,14 @@ $dateTime
             'text' => $text,
             'reply_markup' => [
                 'inline_keyboard' => [
-                    [['text' => 'بله ✅', 'callback_data' => 'confirm_delete_list_' . $list_id], 
-                    ['text' => 'خیر ❌', 'callback_data' => 'view_list_' . $list_id]],
+                    [
+                        ['text' => 'بله ✅', 'callback_data' => 'confirm_delete_list_' . $list_id],
+                        ['text' => 'خیر ❌', 'callback_data' => 'view_list_' . $list_id]
+                    ],
                 ]
             ]
         ]);
-    }
-    
-    else if ($order == "confirm_delete_list") {
+    } else if ($order == "confirm_delete_list") {
         $db->q("UPDATE tbl_notification_lists SET is_deleted = 1 WHERE id = ?", [$list_id]);
         $text = "لیست با موفقیت حذف شد 🗑";
         bot("editMessageText", [
@@ -187,9 +171,7 @@ $dateTime
                 ]
             ]
         ]);
-    }
-    
-    else if ($order == "more_options") {
+    } else if ($order == "more_options") {
         $text = "📦 گزینه‌های بیشتر";
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$list_id, $tg_id]);
         bot("editMessageText", [
@@ -198,14 +180,13 @@ $dateTime
             'text' => $text,
             'reply_markup' => [
                 'inline_keyboard' => [
-                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
-                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
-                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']]]
+                    [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
+                    [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
+                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']]]
                 ]
-            ]]);
-    }
-    
-    else if ($order == "rename_list"){
+            ]
+        ]);
+    } else if ($order == "rename_list") {
         update_step("rename_list_" . $list_id);
         $text = "🔹 لطفا نام جدیدی برای لیست وارد کنید:";
         bot("editMessageText", [
@@ -219,10 +200,12 @@ $dateTime
                 ]
             ]
         ]);
-    }
-
-    else if ($order == "view_lists") {
-        $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE user_id = ? AND is_deleted = 0", [$user_db_id]);
+    } else if ($order == "view_lists") {
+        $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
+        if (isset($db_user[0])) {
+            $user_db_id = $db_user[0]['id'];
+        }
+        $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ? AND is_deleted = 0", [$user_db_id]);
         if ($lists[0]) {
             $text = "📂 لیست‌های شما:";
             foreach ($lists as $list) {
@@ -234,5 +217,4 @@ $dateTime
             }
         }
     }
-    
 }
