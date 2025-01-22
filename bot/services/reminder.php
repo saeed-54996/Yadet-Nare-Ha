@@ -36,7 +36,6 @@ foreach ($tasks as $task) {
             sendNotification($subscriber['tg_id'], $task['task_name'], $days);
         }
     }
-    }
 }
 
 function sendNotification($userId, $taskName, $days) {
