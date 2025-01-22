@@ -24,21 +24,30 @@ foreach ($tasks as $task) {
     $between = $current_time->diff($checktime);
 
     $days = $between->format('%R%a');
-    adminm("days: $days");
     if ($days == "+1" || $days == "+3" || $days == "+7") {
-        // Send notification to users in the subscription list
-        $subscribers = $db->q('SELECT * FROM `tbl_list_subscribers` WHERE list_id = ?', [$task['list_id']]);
+        // Join the subscribers and users table to get tg_id
+        $subscribers = $db->q('
+            SELECT u.tg_id 
+            FROM `tbl_list_subscribers` s
+            JOIN `tbl_users` u ON s.user_id = u.id
+            WHERE s.list_id = ?', [$task['list_id']]
+        );
         foreach ($subscribers as $subscriber) {
-            // Send notification to $subscriber['user_id']
+            // Send notification to $subscriber['tg_id']
             // You can use your preferred method to send notifications (e.g., email, SMS, etc.)
-            sendNotification($subscriber['user_id'], $task['task_name'], $days);
+            sendNotification($subscriber['tg_id'], $task['task_name'], $days);
         }
+    }
     }
 }
 
 function sendNotification($userId, $taskName, $days) {
     // Implement your notification logic here
-    // For example, you can send an email or SMS to the user
-    echo "Notification sent to user $userId for task '$taskName' which is due in $days days.\n";
+    // For example, you can send a message to the user using a bot
+    $message = "🔔 یادآوری: وظیفه '$taskName' شما در $days روز دیگر است. فراموش نکنید که آن را تکمیل کنید! 😊";
+    bot("sendMessage", [
+        'chat_id' => $userId,
+        'text' => $message,
+        'parse_mode' => 'markdown',
+    ]);
 }
-echo "hi this is test";
