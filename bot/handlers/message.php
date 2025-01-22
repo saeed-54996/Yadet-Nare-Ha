@@ -562,6 +562,24 @@ WHERE
             'force_reply' => true,
         ]);
     }
+    // Notify all subscribers about the new task
+    $subscribers = $db->q("
+        SELECT u.tg_id 
+        FROM tbl_list_subscribers s
+        JOIN tbl_users u ON s.user_id = u.id
+        WHERE s.list_id = ?", [$list_id]);
+
+    foreach ($subscribers as $subscriber) {
+        bot("sendMessage", [
+            'chat_id' => $subscriber['tg_id'],
+            'text' => "🔔 وظیفه جدیدی به لیست شما اضافه شد. برای مشاهده وظایف، روی دکمه زیر کلیک کنید.",
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => 'مشاهده 30 وظیفه اخیر 📋', 'callback_data' => 'view_30_tasks_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
 } else if (preg_match('/^(rename_list)_([0-9]+)$/', $user_step, $matches)) {
     $order = $matches[1];
     $list_id = $matches[2];
