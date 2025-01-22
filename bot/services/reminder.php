@@ -13,9 +13,19 @@ $sub = $db->q('SELECT * FROM `tbl_tasks` WHERE task_date IS NOT NULL AND is_dele
 foreach ($sub as $s){
   $checktime = new DateTime($s['task_date']);
   $between = $current_time->diff($checktime);
-  if($between->format('%R%a') == "+0"){
-    // do somthing
-  }
+  // %R = + or -
+  // %a = days
+  // %H = hours
+  // %i = minutes
+  // %s = seconds
+  if($between->format('%R%a') == "+1"){
+    // task is tomorrow;
+  }else if ($between->format('%R%a') == "+0"){
+    // task is today;
+  }else if ($between->format('%R%a') == "-1"){
+    // task was yesterday;
+    }
+
   //echo $s['task_name'] . " == " . $between->format('%R%a days, %H hours');
   //echo "<br>";
 };
