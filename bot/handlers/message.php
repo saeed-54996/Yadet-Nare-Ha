@@ -163,7 +163,7 @@ WHERE
             $db->q("INSERT INTO tbl_list_subscribers (list_id, user_id) VALUES (?,?)",[$list_id,$user_db_id]);
             bot("sendMessage", [
                 'chat_id' => $chat_id,
-                'text' => "✅ شما با موفقیت در لیست $list[list_name] عضو شدید.",
+                'text' => "✅ شما با موفقیت در لیست '$list[list_name]' عضو شدید.",
             ]);
         }else{
             bot("sendMessage", [
