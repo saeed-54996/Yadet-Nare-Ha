@@ -23,7 +23,7 @@ foreach ($tasks as $task) {
     $between = $current_time->diff($checktime);
 
     $days = $between->format('%R%a');
-
+    adminm("days: $days");
     if ($days == "+1" || $days == "+3" || $days == "+7") {
         // Send notification to users in the subscription list
         $subscribers = $db->q('SELECT * FROM `tbl_list_subscribers` WHERE list_id = ?', [$task['list_id']]);
@@ -40,3 +40,4 @@ function sendNotification($userId, $taskName, $days) {
     // For example, you can send an email or SMS to the user
     echo "Notification sent to user $userId for task '$taskName' which is due in $days days.\n";
 }
+echo "hi this is test";
