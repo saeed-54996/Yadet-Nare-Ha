@@ -6,7 +6,7 @@ class Database {
 
     public function __construct() {
         // Load configuration settings
-        $this->config = require 'config.php';
+        $this->config = require __DIR__ . '/config.php';
         // Establish a database connection
         $this->connect();
     }
