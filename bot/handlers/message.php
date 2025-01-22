@@ -92,7 +92,6 @@ if ($text == "/start") {
 } else if (preg_match('/^\/start ([a-zA-Z0-9+\/=]+)$/',$text,$matches)){
     $order = $matches[1];
     $order = decrypt($order);
-    adminm($order);
     if (preg_match('/^(edit_task)_(\d+)$/', $order, $matches)) {
         $task_id = $matches[2];
         $task = $db->q("SELECT 
@@ -149,7 +148,6 @@ WHERE
         }
     }
     else if (preg_match('/^(subscribe_list)_(\d+)$/', $order, $matches)){
-        adminm("detected");
         $list_id = $matches[2];
         $list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?",[$list_id]);
         if(isset($list[0])){
