@@ -1,6 +1,6 @@
 <?php
 
-$config = require __DIR__ . '/config.php';
+$config = require __DIR__ . '/../config.php';
 define('BOT_TOKEN', $config['bot_token']);
 define('ADMIN_ID', $config['admin_id']);
 define('ENCRYPTION_KEY', $config['encryption_key']);
