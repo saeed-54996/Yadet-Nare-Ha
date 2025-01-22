@@ -174,18 +174,33 @@ $dateTime
     } else if ($order == "more_options") {
         $text = "📦 گزینه‌های بیشتر";
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$list_id, $tg_id]);
-        bot("editMessageText", [
-            'chat_id' => $chat_id,
-            'message_id' => $message_id,
-            'text' => $text,
-            'reply_markup' => [
-                'inline_keyboard' => [
-                    [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
-                    [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
-                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']]]
+        if ($db_list[0]) {
+            bot("editMessageText", [
+                'chat_id' => $chat_id,
+                'message_id' => $message_id,
+                'text' => $text,
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
+                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']]]
+                    ]
                 ]
-            ]
-        ]);
+            ]);
+        }
+        else {
+            $text = "شما دسترسی لازم را برای مدیریت ندارید 😕";
+            bot("editMessageText", [
+                'chat_id' => $chat_id,
+                'message_id' => $message_id,
+                'text' => $text,
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                    ]
+                ]
+            ]);
+        }
     } else if ($order == "rename_list") {
         update_step("rename_list_" . $list_id);
         $text = "🔹 لطفا نام جدیدی برای لیست وارد کنید:";
