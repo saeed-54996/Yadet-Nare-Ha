@@ -173,8 +173,9 @@ WHERE
         $list_id = $matches[2];
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$list_id, $tg_id]);
         if (isset($db_list[0])) {
+            $name = $db_list[0]['list_name'];
             $order = encrypt("subscribe_list_" . $db_list[0]['id']);
-            $text = "📂 لیست $db_list[0][list_name] انتخاب شد.\n\n
+            $text = "📂 لیست $name انتخاب شد.\n\n
 
 لینک عضویت در این لیست:
 `https://t.me/YadetNareHa_robot?start=$order`
