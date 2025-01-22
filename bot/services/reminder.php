@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../functions/jalaliToUnix.php';
+require_once __DIR__ . '/../functions/global.php';
 require_once __DIR__ . '/../../db.php';
 require_once __DIR__ . '/../core.php';
 
