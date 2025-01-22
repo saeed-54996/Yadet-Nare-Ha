@@ -22,9 +22,9 @@ foreach ($tasks as $task) {
     $checktime = new DateTime($task['task_date']);
     $between = $current_time->diff($checktime);
 
-    $days = (int)$between->format('%R%a');
+    $days = $between->format('%R%a');
 
-    if ($days == 1 || $days == 3 || $days == 7) {
+    if ($days == "+1" || $days == "+3" || $days == "+7") {
         // Send notification to users in the subscription list
         $subscribers = $db->q('SELECT * FROM `tbl_list_subscribers` WHERE list_id = ?', [$task['list_id']]);
         foreach ($subscribers as $subscriber) {
