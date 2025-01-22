@@ -143,6 +143,31 @@ WHERE
             ]);
         }
     }
+    if (preg_match('^(subscribe_list)_(\d+)$', $order, $matches)){
+        $list_id = $matches[2];
+        $list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?",[$list_id]);
+        if(isset($list[0])){
+            $list = $list[0];
+            $sub = $db->q('SELECT * FROM tbl_list_subscribers WHERE user_id = ? AND list_id = ?',[$user_db_id,$list_id]);
+            if(isset($sub[0])){
+                bot("sendMessage", [
+                    'chat_id' => $chat_id,
+                    'text' => "❌ شما قبلا مشترک این لیست شده‌اید!",
+                ]);
+                exit();
+            }
+            $db->q("INSERT INTO tbl_list_subscribers (list_id, user_id) VALUES (?,?)",[$list_id,$user_db_id]);
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => "✅ شما با موفقیت در لیست $list[list_name] عضو شدید.",
+            ]);
+        }else{
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => "چنین لیستی یافت نشد ❌",
+            ]);
+        }
+    }
 
 } else if ($text == "📋 لیست های انتشار") {
     $text = "
@@ -198,7 +223,12 @@ WHERE
         $text = str_replace("📂 ", "", $text);
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
         if (isset($db_list[0])) {
-            $text = "📂 لیست $text انتخاب شد.\n\n🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+            $text = "📂 لیست $text انتخاب شد.\n\n
+
+لینک عضویت در این لیست:
+`t.me/YadetNareHa_robot?start=".encrypt("subscribe_list_$db_list[0]['id']")."`
+
+🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
             bot("sendMessage", [
                 'chat_id' => $chat_id,
                 'text' => $text,
