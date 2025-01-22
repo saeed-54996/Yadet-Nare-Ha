@@ -229,10 +229,11 @@ WHERE
         $text = str_replace("📂 ", "", $text);
         $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE list_name = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$text, $tg_id]);
         if (isset($db_list[0])) {
+            $order = encrypt("subscribe_list_".$db_list[0]['id']);
             $text = "📂 لیست $text انتخاب شد.\n\n
 
 لینک عضویت در این لیست:
-`https://t.me/YadetNareHa_robot?start=".encrypt("subscribe_list_$db_list[0]['id']")."`
+`https://t.me/YadetNareHa_robot?start=$order`
 
 🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
             bot("sendMessage", [
