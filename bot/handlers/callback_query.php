@@ -41,7 +41,7 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
 
     $order = $matches[1];
     $list_id = $matches[2];
-    adminm($cdata);
+    //adminm($cdata);
     if ($order == "view_tasks") {
 
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ?", [$list_id]);
