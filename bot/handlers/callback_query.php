@@ -122,6 +122,29 @@ $dateTime
             ]
         ]);
     } else if ($order == "add_task") {
+        //get user_db_id
+        $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
+        if (isset($db_user[0])) {
+            $user_db_id = $db_user[0]['id'];
+        }
+        $list_info = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?", [$list_id]);
+        if ($list_info[0]['list_owner_id'] != $user_db_id) {
+            $task_adding_rule = $list_info[0]['task_adding_rule'];
+            if ($task_adding_rule == 1 || $task_adding_rule == 0) {
+                $text = "شما اجازه افزودن وظیفه جدید به این لیست را ندارید 😕";
+                bot("editMessageText", [
+                    'chat_id' => $chat_id,
+                    'message_id' => $message_id,
+                    'text' => $text,
+                    'reply_markup' => [
+                        'inline_keyboard' => [
+                            [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                        ]
+                    ]
+                ]);
+                exit;
+            }
+        }
         update_step("add_task_to_list_" . $list_id);
         $text = "🔹بسیار عالی\!\!  
 گام‌های زیر رو به ترتیب برای افزودن وظیفه جدید طی می‌کنیم 👇  
@@ -275,10 +298,11 @@ $dateTime
 
 
 else if ($cdata == "view_lists") {
-    $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
-    if (isset($db_user[0])) {
-        $user_db_id = $db_user[0]['id'];
-    }
+    //get user_db_id
+        $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
+        if (isset($db_user[0])) {
+            $user_db_id = $db_user[0]['id'];
+        }
     $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE list_owner_id = ? AND is_deleted = 0", [$user_db_id]);
     if ($lists[0]) {
         $text = "📂 لیست‌های شما:";
