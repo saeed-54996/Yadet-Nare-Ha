@@ -226,17 +226,17 @@ WHERE
             $text = "📂 لیست $text انتخاب شد.\n\n
 
 لینک عضویت در این لیست:
-`t.me/YadetNareHa_robot?start=".encrypt("subscribe_list_$db_list[0]['id']")."`
+`https://t.me/YadetNareHa_robot?start=".encrypt("subscribe_list_$db_list[0]['id']")."`
 
 🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
             bot("sendMessage", [
                 'chat_id' => $chat_id,
                 'text' => $text,
+                'parse_mode' => 'markdown',
                 'reply_markup' => [
                     'inline_keyboard' => [
                         [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_" . $db_list[0]['id']]],
                         [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
-                        [['text' => '🔙 Back', 'callback_data' => 'back_action']],
                     ]
                 ]
             ]);
