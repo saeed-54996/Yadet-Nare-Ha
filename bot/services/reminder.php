@@ -33,8 +33,6 @@ foreach ($tasks as $task) {
             WHERE s.list_id = ?', [$task['list_id']]
         );
         foreach ($subscribers as $subscriber) {
-            // Send notification to $subscriber['tg_id']
-            // You can use your preferred method to send notifications (e.g., email, SMS, etc.)
             sendNotification($subscriber['tg_id'], $task['task_name'], $days);
         }
     }
@@ -42,8 +40,6 @@ foreach ($tasks as $task) {
 }
 
 function sendNotification($userId, $taskName, $days) {
-    // Implement your notification logic here
-    // For example, you can send a message to the user using a bot
     $message = "🔔 یادآوری: وظیفه '$taskName' شما در $days روز دیگر است. فراموش نکنید که آن را تکمیل کنید! 😊";
     bot("sendMessage", [
         'chat_id' => $userId,
