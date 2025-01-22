@@ -148,7 +148,7 @@ WHERE
             ]);
         }
     }
-    else if (preg_match('^(subscribe_list)_(\d+)$', $order, $matches)){
+    else if (preg_match('/^(subscribe_list)_(\d+)$/', $order, $matches)){
         adminm("detected");
         $list_id = $matches[2];
         $list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?",[$list_id]);
