@@ -561,6 +561,7 @@ WHERE
             'parse_mode' => "MarkdownV2",
             'force_reply' => true,
         ]);
+        exit();
     }
     // Notify all subscribers about the new task
     $task_info = $db->q("SELECT t.task_name, t.task_description, t.task_date
