@@ -200,9 +200,9 @@ $dateTime
                 'inline_keyboard' => [
                         [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
                         [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
-                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']],
-            ]
-        ]);
+                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']]]
+                ]
+            ]]);
     }
     
     else if ($order == "rename_list"){
