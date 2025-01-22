@@ -79,7 +79,7 @@ if (preg_match('/^([a-z_0-9]+)_(\d+)$/', $cdata, $matches)) {
     } 
     
     
-    else if($order = "view_30_tasks"){
+    else if($order == "view_30_tasks"){
         $list_tasks = $db->q("SELECT * FROM tbl_tasks WHERE list_id = ? AND is_end = 0 AND is_deleted = 0 ORDER BY task_date ASC , id ASC LIMIT 30", [$list_id]);
 
         foreach($list_tasks as $task){
