@@ -155,4 +155,84 @@ $dateTime
         ]);
 
     }
+
+
+
+
+    else if ($order == "delete_list") {
+        $text = "آیا واقعا میخواهید این لیست را حذف کنید؟! 😵";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => 'بله ✅', 'callback_data' => 'confirm_delete_list_' . $list_id], 
+                    ['text' => 'خیر ❌', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
+    
+    else if ($order == "confirm_delete_list") {
+        $db->q("UPDATE tbl_notification_lists SET is_deleted = 1 WHERE id = ?", [$list_id]);
+        $text = "لیست با موفقیت حذف شد 🗑";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_lists']],
+                ]
+            ]
+        ]);
+    }
+    
+    else if ($order == "more_options") {
+        $text = "📦 گزینه‌های بیشتر";
+        $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$list_id, $tg_id]);
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
+                        [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $db_list[0]['id']],
+            ]
+        ]);
+    }
+    
+    else if ($order == "rename_list"){
+        update_step("rename_list_" . $list_id);
+        $text = "🔹 لطفا نام جدیدی برای لیست وارد کنید:";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'force_reply' => true,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 لغو و بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
+
+    else if ($order == "view_lists") {
+        $lists = $db->q("SELECT * FROM tbl_notification_lists WHERE user_id = ? AND is_deleted = 0", [$user_db_id]);
+        if ($lists[0]) {
+            $text = "📂 لیست‌های شما:";
+            foreach ($lists as $list) {
+                $list_id = $list['id'];
+                $list_name = $list['list_name'];
+                $text .= "\n🔹 $list_name";
+                $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("view_list_$list_id") . "'>مشاهده</a>";
+                $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
+            }
+        }
+    }
+    
 }
