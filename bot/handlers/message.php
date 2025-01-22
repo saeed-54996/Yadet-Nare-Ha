@@ -6,7 +6,11 @@ $text = $update["message"]['text'] ?? null;
 $username = $update["message"]['from']['username'] ?? null;
 $first_name = $update["message"]['from']['first_name'] ?? null;
 $last_name = $update["message"]['from']['last_name'] ?? null;
-$tg_id = $update["message"]['from']['id'] ?? 1;
+$tg_id = $update["message"]['from']['id'] ?? null;
+if($tg_id == null){
+    $tg_id = $update["callback_query"]['from']['id'] ?? null;
+    adminm($content);
+}
 $message_id = $update["message"]['message_id'] ?? null;
 
 //replied message:
