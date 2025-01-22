@@ -126,6 +126,22 @@ $dateTime
         $db_user = $db->q("SELECT * FROM tbl_users WHERE tg_id = ?", [$tg_id]);
         if (isset($db_user[0])) {
             $user_db_id = $db_user[0]['id'];
+            $user_db_first_name = $db_user[0]['first_name'];
+            $user_db_last_name = $db_user[0]['last_name'];
+        }
+        if (is_null($user_db_first_name) || is_null($user_db_last_name)) {
+            $text = "لطفا به تنظیمات رفته و نام نمایشی خود را تنظیم کنید.";
+            bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+            ]);
+            exit;
         }
         $list_info = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ?", [$list_id]);
         if ($list_info[0]['list_owner_id'] != $user_db_id) {
