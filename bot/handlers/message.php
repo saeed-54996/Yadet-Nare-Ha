@@ -169,6 +169,29 @@ WHERE
                 'text' => "چنین لیستی یافت نشد ❌",
             ]);
         }
+    } else if (preg_match('/^(view_list)_(\d+)$/', $order, $matches)) {
+        $list_id = $matches[2];
+        $db_list = $db->q("SELECT * FROM tbl_notification_lists WHERE id = ? AND list_owner_id = (SELECT id FROM tbl_users WHERE tg_id = ?)", [$list_id, $tg_id]);
+        if (isset($db_list[0])) {
+            $order = encrypt("subscribe_list_" . $db_list[0]['id']);
+            $text = "📂 لیست $text انتخاب شد.\n\n
+
+لینک عضویت در این لیست:
+`https://t.me/YadetNareHa_robot?start=$order`
+
+🔹 لطفا یکی از گزینه‌های زیر را انتخاب کنید:";
+            bot("sendMessage", [
+                'chat_id' => $chat_id,
+                'text' => $text,
+                'parse_mode' => 'markdown',
+                'reply_markup' => [
+                    'inline_keyboard' => [
+                        [['text' => 'تغییر نام لیست ✍️', 'callback_data' => 'rename_list_' . $db_list[0]['id']], ['text' => '🗑 حذف لیست', 'callback_data' => "delete_list_" . $db_list[0]['id']]],
+                        [['text' => 'تغییر دسترسی ایجاد یادآوری 📝', 'callback_data' => 'e_task_rule_' . $db_list[0]['id']]],
+                    ]
+                ]
+            ]);
+        }
     }
 } else if ($text == "📋 لیست های انتشار") {
     $text = "

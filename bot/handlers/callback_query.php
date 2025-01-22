@@ -217,7 +217,7 @@ else if ($cdata == "view_lists") {
             $list_name = $list['list_name'];
             $text .= "\n\n\n---------\n🔹 $list_name";
             $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("view_list_$list_id") . "'>مشاهده</a>";
-            $text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
+            //$text .= "\n🔗 <a href='https://t.me/YadetNareHa_robot?start=" . encrypt("edit_list_$list_id") . "'>ویرایش</a>";
         }
     }
     bot("editMessageText", [
