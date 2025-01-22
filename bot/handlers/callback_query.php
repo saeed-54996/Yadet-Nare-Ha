@@ -200,7 +200,49 @@ $dateTime
                 ]
             ]
         ]);
-    } 
+    }
+    else if ($order == "e_task_rule"){
+        $text = "🔹 لطفا دسترسی ایجاد یادآوری را انتخاب کنید:";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => 'همه کاربران ✅', 'callback_data' => 'all_users_e_task_rule_' . $list_id]],
+                    [['text' => 'فقط من ✅', 'callback_data' => 'only_me_e_task_rule_' . $list_id]],
+                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
+    else if ($order == "all_users_e_task_rule") {
+        $db->q("UPDATE tbl_notification_lists SET task_rule = 2 WHERE id = ?", [$list_id]);
+        $text = "دسترسی ایجاد یادآوری برای همه کاربران تنظیم شد ✅";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+    } else if ($order == "only_me_e_task_rule") {
+        $db->q("UPDATE tbl_notification_lists SET task_rule = 1 WHERE id = ?", [$list_id]);
+        $text = "دسترسی ایجاد یادآوری فقط برای شما تنظیم شد ✅";
+        bot("editMessageText", [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id,
+            'text' => $text,
+            'reply_markup' => [
+                'inline_keyboard' => [
+                    [['text' => '🔙 بازگشت', 'callback_data' => 'view_list_' . $list_id]],
+                ]
+            ]
+        ]);
+    }
 }
 
 
